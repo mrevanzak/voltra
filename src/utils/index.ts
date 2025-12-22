@@ -1,2 +1,2 @@
-export * from './assertRunningOnApple'
-export * from './useUpdateOnHMR'
+export * from './assertRunningOnApple.js'
+export * from './useUpdateOnHMR.js'

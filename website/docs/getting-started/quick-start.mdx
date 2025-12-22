@@ -51,7 +51,8 @@ Now let's create a simple "Hello World" live activity. Create a new component:
 
 ```tsx
 import React from 'react'
-import { startVoltra, Voltra } from 'voltra'
+import { startLiveActivity } from 'voltra/client'
+import { Voltra } from 'voltra'
 
 function HelloWorldActivity() {
   const activityUI = (
@@ -62,7 +63,7 @@ function HelloWorldActivity() {
   )
 
   const startActivity = async () => {
-    await startVoltra({
+    await startLiveActivity({
       lockScreen: activityUI,
     })
   }

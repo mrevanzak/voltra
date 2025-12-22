@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
 
-import { VoltraView, VoltraViewProps } from './VoltraView'
+import { VoltraView, VoltraViewProps } from './VoltraView.js'
 
 /**
  * Dimensions for iOS lock screen Live Activity in points (approximate)

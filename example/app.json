@@ -29,7 +29,8 @@
               "id": "weather",
               "displayName": "Weather Widget",
               "description": "Shows current weather conditions",
-              "supportedFamilies": ["systemSmall", "systemMedium"]
+              "supportedFamilies": ["systemSmall", "systemMedium", "systemLarge"],
+              "initialStatePath": "./widgets/weather-initial.tsx"
             }
           ]
         }

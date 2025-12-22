@@ -1,4 +1,4 @@
-import { StyleProp, TextStyle as RNTextStyle, ViewStyle as RNViewStyle } from 'react-native'
+import type { StyleProp, TextStyle as RNTextStyle, ViewStyle as RNViewStyle } from 'react-native'
 
 export type VoltraViewStyle = Pick<
   RNViewStyle,

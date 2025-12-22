@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { addVoltraListener } from './events'
-import { logger } from './logger'
-import { renderVoltraToString, VoltraVariants } from './renderer'
-import type { DismissalPolicy } from './types'
-import { assertRunningOnApple, useUpdateOnHMR } from './utils'
-import VoltraModule from './VoltraModule'
+import { addVoltraListener } from './events.js'
+import { logger } from './logger.js'
+import { renderVoltraToString, VoltraVariants } from './renderer/index.js'
+import type { DismissalPolicy } from './types.js'
+import { assertRunningOnApple, useUpdateOnHMR } from './utils/index.js'
+import VoltraModule from './VoltraModule.js'
 
 export type SharedLiveActivityOptions = {
   /**

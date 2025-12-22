@@ -1,6 +1,6 @@
 import React, { Context, ReactDispatcher, ReactHooksDispatcher } from 'react'
 
-import { ContextRegistry } from './context-registry'
+import { ContextRegistry } from './context-registry.js'
 
 declare module 'react' {
   export type ReactHooksDispatcher = {

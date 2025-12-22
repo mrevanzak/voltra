@@ -1,5 +1,5 @@
-import { createVoltraComponent } from './createVoltraComponent'
-import type { LinearGradientProps as SwiftLinearGradientProps } from './props/LinearGradient'
+import { createVoltraComponent } from './createVoltraComponent.js'
+import type { LinearGradientProps as SwiftLinearGradientProps } from './props/LinearGradient.js'
 
 // Helper function to convert point to string
 const convertPointToString = (point: LinearGradientProps['start'] | LinearGradientProps['end']): string | null => {

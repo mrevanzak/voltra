@@ -9,6 +9,10 @@
       "types": "./build/index.d.ts",
       "default": "./build/index.js"
     },
+    "./client": {
+      "types": "./build/client.d.ts",
+      "default": "./build/client.js"
+    },
     "./server": {
       "types": "./build/server.d.ts",
       "default": "./build/server.js"

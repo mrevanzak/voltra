@@ -36,7 +36,7 @@ type PreloadImagesResult = {
 **Example:**
 
 ```typescript
-import { preloadImages } from 'voltra'
+import { preloadImages } from 'voltra/client'
 
 const result = await preloadImages([
   {
@@ -55,6 +55,8 @@ console.log('Failed:', result.failed)
 Reloads Live Activities to pick up newly preloaded images. If no `activityNames` are provided, all active Live Activities will be reloaded.
 
 ```typescript
+import { reloadLiveActivities } from 'voltra/client'
+
 // Reload all Live Activities
 await reloadLiveActivities()
 
@@ -67,6 +69,8 @@ await reloadLiveActivities(['music-player', 'order-tracker'])
 Removes preloaded images from App Group storage. If no `keys` are provided, all preloaded images will be cleared.
 
 ```typescript
+import { clearPreloadedImages } from 'voltra/client'
+
 // Clear specific images
 await clearPreloadedImages(['album-art', 'profile-pic'])
 

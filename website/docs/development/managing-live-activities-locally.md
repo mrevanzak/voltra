@@ -19,10 +19,11 @@ The imperative APIs provide direct, programmatic control over Live Activities. T
 
 ### Starting Live Activities
 
-Use `startVoltra()` to create and display a new Live Activity.
+Use `startLiveActivity()` to create and display a new Live Activity.
 
 ```typescript
-import { startVoltra, Voltra } from 'voltra'
+import { startLiveActivity } from 'voltra/client'
+import { Voltra } from 'voltra'
 
 const variants = {
   lockScreen: (
@@ -48,7 +49,7 @@ const variants = {
   ),
 }
 
-const activityId = await startVoltra(variants, {
+const activityId = await startLiveActivity(variants, {
   activityId: 'order-123', // Optional: for re-binding on app restart
   deepLinkUrl: 'myapp://order/123', // Optional: URL to open when tapped
   dismissalPolicy: { after: 30 },
@@ -66,10 +67,11 @@ const activityId = await startVoltra(variants, {
 
 ### Updating Live Activities
 
-Use `updateVoltra()` to modify the content and configuration of an active Live Activity.
+Use `updateLiveActivity()` to modify the content and configuration of an active Live Activity.
 
 ```typescript
-import { updateVoltra, Voltra } from 'voltra'
+import { updateLiveActivity } from 'voltra/client'
+import { Voltra } from 'voltra'
 
 const updatedVariants = {
   lockScreen: (
@@ -89,7 +91,7 @@ const updatedVariants = {
   minimal: <Voltra.Symbol name="bag.fill" tintColor="#F59E0B" />,
 }
 
-await updateVoltra(activityId, updatedVariants, {
+await updateLiveActivity(activityId, updatedVariants, {
   dismissalPolicy: { after: 300 }, // 5 minutes
   relevanceScore: 1.0, // High priority now
 })
@@ -97,18 +99,18 @@ await updateVoltra(activityId, updatedVariants, {
 
 **Parameters:**
 
-- `activityId`: The ID returned from `startVoltra()`
+- `activityId`: The ID returned from `startLiveActivity()`
 - `variants`: Updated UI variants
 - `options`: Updated configuration options
 
 ### Stopping Live Activities
 
-Use `stopVoltra()` to end a Live Activity.
+Use `stopLiveActivity()` to end a Live Activity.
 
 ```typescript
-import { stopVoltra } from 'voltra'
+import { stopLiveActivity } from 'voltra/client'
 
-await stopVoltra(activityId, {
+await stopLiveActivity(activityId, {
   dismissalPolicy: { after: 10 }, // Keep visible for 10 seconds after ending
 })
 ```
@@ -120,12 +122,12 @@ await stopVoltra(activityId, {
 
 ### Checking Live Activity status
 
-Use `isVoltraActive()` to check if a specific Live Activity is currently active.
+Use `isLiveActivityActive()` to check if a specific Live Activity is currently active.
 
 ```typescript
-import { isVoltraActive } from 'voltra'
+import { isLiveActivityActive } from 'voltra/client'
 
-if (isVoltraActive('order-123')) {
+if (isLiveActivityActive('order-123')) {
   console.log('Live Activity is active')
 } else {
   console.log('Live Activity is not active')
@@ -143,7 +145,7 @@ if (isVoltraActive('order-123')) {
 #### Platform detection
 
 ```typescript
-import { isGlassSupported, isHeadless } from 'voltra'
+import { isGlassSupported, isHeadless } from 'voltra/client'
 
 // Check if the device supports Liquid Glass (iOS 26+)
 if (isGlassSupported()) {
@@ -159,13 +161,13 @@ if (isHeadless()) {
 
 #### Ending all Live Activities
 
-Use `endAllVoltra()` to immediately end all active Live Activities in your app.
+Use `endAllLiveActivities()` to immediately end all active Live Activities in your app.
 
 ```typescript
-import { endAllVoltra } from 'voltra'
+import { endAllLiveActivities } from 'voltra/client'
 
 // End all Live Activities (useful for cleanup or logout scenarios)
-await endAllVoltra()
+await endAllLiveActivities()
 ```
 
 **Note:** This function ends all Live Activities immediately without applying any dismissal policies. Use this for bulk cleanup scenarios rather than individual activity management.
@@ -180,7 +182,7 @@ Live Activities emit events that you can listen to for state changes and user in
 
 ## Configuration options
 
-Voltra provides several configuration options to control Live Activity behavior, lifecycle, and appearance. These options can be used with `startVoltra()`, `updateVoltra()`, and `stopVoltra()`.
+Voltra provides several configuration options to control Live Activity behavior, lifecycle, and appearance. These options can be used with `startLiveActivity()`, `updateLiveActivity()`, and `stopLiveActivity()`.
 
 ### Dismissal policy
 
@@ -195,22 +197,22 @@ Controls how Live Activities behave after they end.
 
 ```typescript
 // Immediate dismissal (default)
-await startVoltra(variants, {
+await startLiveActivity(variants, {
   dismissalPolicy: 'immediate',
 })
 
 // Keep visible for 30 seconds after ending
-await startVoltra(variants, {
+await startLiveActivity(variants, {
   dismissalPolicy: { after: 30 },
 })
 
 // Update dismissal timing for active Live Activities
-await updateVoltra(activityId, variants, {
+await updateLiveActivity(activityId, variants, {
   dismissalPolicy: { after: 300 }, // 5 minutes
 })
 
 // Set dismissal timing when stopping
-await stopVoltra(activityId, {
+await stopLiveActivity(activityId, {
   dismissalPolicy: { after: 10 },
 })
 ```
@@ -223,12 +225,12 @@ Specifies when a Live Activity should be considered stale and automatically dism
 
 ```typescript
 // Dismiss after 1 hour
-await startVoltra(variants, {
+await startLiveActivity(variants, {
   staleDate: Date.now() + 60 * 60 * 1000,
 })
 
 // Dismiss after 2 hours
-await startVoltra(variants, {
+await startLiveActivity(variants, {
   staleDate: Date.now() + 2 * 60 * 60 * 1000,
 })
 ```
@@ -243,12 +245,12 @@ Helps iOS prioritize which Live Activities to display when space is limited.
 
 ```typescript
 // High priority (e.g., active delivery)
-await startVoltra(variants, {
+await startLiveActivity(variants, {
   relevanceScore: 0.8,
 })
 
 // Low priority (e.g., background task)
-await startVoltra(variants, {
+await startLiveActivity(variants, {
   relevanceScore: 0.2,
 })
 ```

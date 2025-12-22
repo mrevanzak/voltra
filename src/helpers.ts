@@ -1,6 +1,6 @@
 import { Platform } from 'react-native'
 
-import VoltraModule from './VoltraModule'
+import VoltraModule from './VoltraModule.js'
 
 /**
  * Return whether Liquid Glass APIs are supported on this device (iOS 26+).

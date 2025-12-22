@@ -1,6 +1,6 @@
 import { Platform } from 'react-native'
 
-import VoltraModule from './VoltraModule'
+import VoltraModule from './VoltraModule.js'
 
 /**
  * Options for preloading a single image

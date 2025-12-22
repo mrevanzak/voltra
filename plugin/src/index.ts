@@ -5,6 +5,7 @@ import { withConfig } from './withConfig'
 import withPlist from './withPlist'
 import { withPodfile } from './withPodfile'
 import { withPushNotifications } from './withPushNotifications'
+import { withWidgetAssets } from './withWidgetAssets'
 import { withWidgetExtensionEntitlements } from './withWidgetExtensionEntitlements'
 import { withWidgets } from './withWidgets'
 import { withXcode } from './withXcode'
@@ -46,7 +47,13 @@ const withVoltra: VoltraConfigPlugin = (config, props) => {
   }
 
   config = withPlugins(config, [
-    [withPlist, { targetName, groupIdentifier: props?.groupIdentifier }],
+    // Generate widget extension files (Info.plist, Assets.xcassets, user images)
+    [withWidgetAssets, { targetName }],
+    // Generate Swift files (VoltraWidgetBundle.swift, VoltraWidgetInitialStates.swift)
+    [withWidgets, { targetName, widgets: props?.widgets }],
+    // Generate entitlements file
+    [withWidgetExtensionEntitlements, { targetName, groupIdentifier: props?.groupIdentifier }],
+    // Configure Xcode project (must run after files are generated)
     [
       withXcode,
       {
@@ -55,10 +62,12 @@ const withVoltra: VoltraConfigPlugin = (config, props) => {
         deploymentTarget,
       },
     ],
-    [withWidgetExtensionEntitlements, { targetName, groupIdentifier: props?.groupIdentifier }],
+    // Update Info.plist with URL schemes
+    [withPlist, { targetName, groupIdentifier: props?.groupIdentifier }],
+    // Configure EAS build settings
     [withConfig, { targetName, bundleIdentifier, groupIdentifier: props?.groupIdentifier }],
+    // Add Podfile target for widget extension
     [withPodfile, { targetName }],
-    [withWidgets, { targetName, widgets: props?.widgets }],
   ])
 
   if (props?.enablePushNotifications) {

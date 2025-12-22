@@ -1,5 +1,5 @@
-import { createVoltraComponent } from './createVoltraComponent'
-import type { SpacerProps } from './props/Spacer'
+import { createVoltraComponent } from './createVoltraComponent.js'
+import type { SpacerProps } from './props/Spacer.js'
 
 export type { SpacerProps }
 export const Spacer = createVoltraComponent<SpacerProps>('Spacer')

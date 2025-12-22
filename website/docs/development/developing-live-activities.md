@@ -2,16 +2,17 @@
 
 Voltra provides APIs that make building and testing Live Activities easier during development.
 
-## useVoltra
+## useLiveActivity
 
-For React development, Voltra provides the `useVoltra` hook for integration with the component lifecycle and automatic updates during development.
+For React development, Voltra provides the `useLiveActivity` hook for integration with the component lifecycle and automatic updates during development.
 
 :::warning
 Unfortunately, iOS suspends background apps after approximately 30 seconds. This means that if you navigate away from your app (for example, to check the Dynamic Island or lock screen), live reload and auto-update functionality will be paused.
 :::
 
 ```typescript
-import { useVoltra, Voltra } from 'voltra'
+import { useLiveActivity } from 'voltra/client'
+import { Voltra } from 'voltra'
 
 function OrderLiveActivity({ orderId, status }) {
   const variants = {
@@ -32,7 +33,7 @@ function OrderLiveActivity({ orderId, status }) {
     ),
   }
 
-  const { start, update, end, isActive } = useVoltra(variants, {
+  const { start, update, end, isActive } = useLiveActivity(variants, {
     activityName: `order-${orderId}`,
     autoStart: true, // Automatically start when component mounts
     autoUpdate: true, // Automatically update when variants change
@@ -62,7 +63,8 @@ For testing and development, Voltra provides a `VoltraView` component that rende
 - Previewing how your Live Activity will look
 
 ```tsx
-import { VoltraView, Voltra } from 'voltra'
+import { VoltraView } from 'voltra/client'
+import { Voltra } from 'voltra'
 
 function MyComponent() {
   const handleInteraction = (event: VoltraInteractionEvent) => {
@@ -77,12 +79,8 @@ function MyComponent() {
       style={{ height: 200, borderRadius: 12, overflow: 'hidden' }}
     >
       <Voltra.VStack style={{ padding: 16, backgroundColor: '#101828' }}>
-        <Voltra.Text style={{ color: '#F8FAFC', fontSize: 18, fontWeight: '600' }}>
-          Test Live Activity
-        </Voltra.Text>
-        <Voltra.Text style={{ color: '#94A3B8', fontSize: 12, marginTop: 8 }}>
-          This is how it will look
-        </Voltra.Text>
+        <Voltra.Text style={{ color: '#F8FAFC', fontSize: 18, fontWeight: '600' }}>Test Live Activity</Voltra.Text>
+        <Voltra.Text style={{ color: '#94A3B8', fontSize: 12, marginTop: 8 }}>This is how it will look</Voltra.Text>
         <Voltra.Button title="Test Button" id="test-button" style={{ marginTop: 12 }} />
       </Voltra.VStack>
     </VoltraView>
@@ -96,6 +94,7 @@ function MyComponent() {
 - `children`: Voltra JSX components to render
 - `style`: React Native style for the container
 - `onInteraction`: Callback for user interactions with buttons/toggles
+
 ```
 
 **Hook Options:**
@@ -111,3 +110,4 @@ function MyComponent() {
 - `update()`: Update the Live Activity
 - `end()`: Stop the Live Activity
 - `isActive`: Boolean indicating if the Live Activity is currently active
+```

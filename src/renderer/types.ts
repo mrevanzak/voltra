@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-import { VoltraJson, VoltraNodeJson } from '../types'
+import { VoltraJson, VoltraNodeJson } from '../types.js'
 
 export type VoltraVariants = {
   lockScreen?:

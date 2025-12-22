@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { addVoltraListener } from 'voltra'
+import { addVoltraListener } from 'voltra/client'
 
 export const useVoltraEvents = (): void => {
   useEffect(() => {

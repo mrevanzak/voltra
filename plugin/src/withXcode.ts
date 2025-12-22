@@ -27,7 +27,7 @@ export const withXcode: ConfigPlugin<{
 
     const targetPath = path.join(platformProjectRoot, targetName)
 
-    const widgetFiles = getWidgetFiles(targetPath)
+    const widgetFiles = getWidgetFiles(targetPath, targetName)
 
     // If target already exists, skip Xcode project structure modifications
     if (existingTarget) {

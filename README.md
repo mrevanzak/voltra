@@ -56,7 +56,8 @@ See the [documentation](https://use-voltra.dev/docs/getting-started/quick-start)
 ## Quick example
 
 ```tsx
-import { useVoltra, Voltra } from 'voltra'
+import { useLiveActivity } from 'voltra/client'
+import { Voltra } from 'voltra'
 
 export function OrderTracker({ orderId }: { orderId: string }) {
   const ui = (
@@ -66,9 +67,10 @@ export function OrderTracker({ orderId }: { orderId: string }) {
     </Voltra.VStack>
   )
 
-  const { start, update, end } = useVoltra(
+  const { start, update, end } = useLiveActivity(
     { lockScreen: ui },
     {
+      activityName: `order-${orderId}`,
       autoStart: true,
       deepLinkUrl: `/orders/${orderId}`,
     }

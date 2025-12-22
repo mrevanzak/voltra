@@ -157,7 +157,7 @@ Voltra provides specialized push tokens that are different from regular device t
 To update existing Live Activities, use activity push tokens:
 
 ```tsx
-import { addVoltraListener } from 'voltra'
+import { addVoltraListener } from 'voltra/client'
 
 useEffect(() => {
   const subscription = addVoltraListener('activityTokenReceived', ({ activityID, activityName, activityPushToken }) => {
@@ -206,7 +206,7 @@ When Live Activity tokens change or need to be refreshed, iOS may wake your app 
 Use the `isHeadless()` function to determine if your app is running in the background:
 
 ```typescript
-import { isHeadless } from 'voltra'
+import { isHeadless } from 'voltra/client'
 
 // In your app's entry point or root component
 if (isHeadless()) {
@@ -224,7 +224,7 @@ When the app is launched in headless mode for token handling, **do not mount you
 
 ```typescript
 // In your app's entry point (e.g., App.tsx, index.js)
-import { isHeadless, addVoltraListener } from 'voltra'
+import { isHeadless, addVoltraListener } from 'voltra/client'
 
 function App() {
   // Handle token events even in headless mode

@@ -34,6 +34,11 @@ export interface WidgetConfig {
    * @default ['systemSmall', 'systemMedium', 'systemLarge']
    */
   supportedFamilies?: WidgetFamily[]
+  /**
+   * Path to a file that default exports a WidgetVariants object for initial widget state.
+   * This will be pre-rendered at build time and bundled into the iOS app.
+   */
+  initialStatePath?: string
 }
 
 interface ConfigPluginProps {

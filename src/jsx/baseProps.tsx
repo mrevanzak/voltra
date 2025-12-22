@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-import type { VoltraStyleProp } from '../styles'
+import type { VoltraStyleProp } from '../styles/index.js'
 
 export type VoltraBaseProps = {
   id?: string

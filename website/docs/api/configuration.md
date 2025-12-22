@@ -16,9 +16,9 @@ Voltra supports configuring how Live Activities behave after they end. You can c
 **Immediate dismissal (default behavior):**
 
 ```typescript
-import { startVoltra } from 'voltra'
+import { startLiveActivity } from 'voltra/client'
 
-await startVoltra(variants, {
+await startLiveActivity(variants, {
   dismissalPolicy: 'immediate', // or omit for default
 })
 ```
@@ -26,7 +26,7 @@ await startVoltra(variants, {
 **Delayed dismissal (keep visible for 30 seconds after ending):**
 
 ```typescript
-await startVoltra(variants, {
+await startLiveActivity(variants, {
   dismissalPolicy: { after: 30 },
 })
 ```
@@ -34,9 +34,9 @@ await startVoltra(variants, {
 **Update dismissal policy for active Live Activities:**
 
 ```typescript
-import { updateVoltra } from 'voltra'
+import { updateLiveActivity } from 'voltra/client'
 
-await updateVoltra(activityId, variants, {
+await updateLiveActivity(activityId, variants, {
   dismissalPolicy: { after: 60 },
 })
 ```
@@ -44,14 +44,14 @@ await updateVoltra(activityId, variants, {
 **Set dismissal policy when ending a Live Activity:**
 
 ```typescript
-import { stopVoltra } from 'voltra'
+import { stopLiveActivity } from 'voltra/client'
 
-await stopVoltra(activityId, {
+await stopLiveActivity(activityId, {
   dismissalPolicy: { after: 10 },
 })
 ```
 
-The dismissal policy applies to both programmatic ending (`stopVoltra`) and natural ending (when timers reach their end time). This gives you fine-grained control over the user experience when Live Activities conclude.
+The dismissal policy applies to both programmatic ending (`stopLiveActivity`) and natural ending (when timers reach their end time). This gives you fine-grained control over the user experience when Live Activities conclude.
 
 ## Additional Configuration Options
 
@@ -62,10 +62,10 @@ Voltra provides additional configuration options to control Live Activity behavi
 The `staleDate` option allows you to specify when a Live Activity should be considered stale and automatically dismissed by the system.
 
 ```typescript
-import { startVoltra } from 'voltra'
+import { startLiveActivity } from 'voltra/client'
 
 // Dismiss the Live Activity after 1 hour
-await startVoltra(variants, {
+await startLiveActivity(variants, {
   staleDate: Date.now() + 60 * 60 * 1000, // 1 hour from now
 })
 ```
@@ -77,15 +77,15 @@ await startVoltra(variants, {
 The `relevanceScore` option helps iOS prioritize which Live Activities to display when space is limited. Higher scores (closer to 1.0) indicate more important activities.
 
 ```typescript
-import { startVoltra } from 'voltra'
+import { startLiveActivity } from 'voltra/client'
 
 // High priority Live Activity (e.g., active delivery)
-await startVoltra(variants, {
+await startLiveActivity(variants, {
   relevanceScore: 0.8,
 })
 
 // Low priority Live Activity (e.g., background task)
-await startVoltra(variants, {
+await startLiveActivity(variants, {
   relevanceScore: 0.2,
 })
 ```
@@ -95,7 +95,7 @@ await startVoltra(variants, {
 These options can be used together with dismissal policy and other configuration options:
 
 ```typescript
-await startVoltra(variants, {
+await startLiveActivity(variants, {
   dismissalPolicy: { after: 30 },
   staleDate: Date.now() + 2 * 60 * 60 * 1000, // 2 hours
   relevanceScore: 0.7,

@@ -22,18 +22,18 @@ import {
   isStrictMode,
   isSuspense,
 } from 'react-is'
-import { StyleSheet } from 'react-native'
 
-import { isVoltraComponent } from '../jsx/createVoltraComponent'
-import { getComponentId } from '../payload/component-ids'
-import { shorten } from '../payload/short-names'
-import { VoltraElementJson, VoltraElementRef, VoltraJson, VoltraNodeJson, VoltraPropValue } from '../types'
-import { ContextRegistry, getContextRegistry } from './context-registry'
-import { getHooksDispatcher, getReactCurrentDispatcher } from './dispatcher'
-import { createElementRegistry, preScanForDuplicates, type ElementRegistry } from './element-registry'
-import { getRenderCache } from './render-cache'
-import { createStylesheetRegistry, type StylesheetRegistry } from './stylesheet-registry'
-import { VoltraVariants } from './types'
+import { isVoltraComponent } from '../jsx/createVoltraComponent.js'
+import { getComponentId } from '../payload/component-ids.js'
+import { shorten } from '../payload/short-names.js'
+import { VoltraElementJson, VoltraElementRef, VoltraJson, VoltraNodeJson, VoltraPropValue } from '../types.js'
+import { ContextRegistry, getContextRegistry } from './context-registry.js'
+import { getHooksDispatcher, getReactCurrentDispatcher } from './dispatcher.js'
+import { createElementRegistry, type ElementRegistry, preScanForDuplicates } from './element-registry.js'
+import { flattenStyle } from './flatten-styles.js'
+import { getRenderCache } from './render-cache.js'
+import { createStylesheetRegistry, type StylesheetRegistry } from './stylesheet-registry.js'
+import { VoltraVariants } from './types.js'
 
 type VoltraRenderingContext = {
   registry: ContextRegistry
@@ -45,8 +45,19 @@ type VoltraRenderingContext = {
 
 function renderNode(element: ReactNode, context: VoltraRenderingContext): VoltraNodeJson {
   // A. Handle Primitives
-  if (element === null || element === undefined || element === false || element === true) {
-    throw new Error(`Expected a React element, but got "${typeof element}".`)
+  // null and undefined should be ignored (no nodes produced) - following React's behavior
+  if (element === null || element === undefined) {
+    return []
+  }
+
+  // Booleans are treated as strings
+  if (typeof element === 'boolean') {
+    if (context.inStringOnlyContext) {
+      return String(element)
+    }
+    throw new Error(
+      `Expected a React element, but got "boolean". Booleans are only allowed as children of Text components.`
+    )
   }
 
   // Handle strings: allow in string-only context, throw error otherwise
@@ -75,6 +86,10 @@ function renderNode(element: ReactNode, context: VoltraRenderingContext): Voltra
       const results: string[] = []
       for (const child of element) {
         const result = renderNode(child, context)
+        // Skip empty results (null/undefined rendered to [])
+        if (Array.isArray(result) && result.length === 0) {
+          continue
+        }
         if (typeof result !== 'string') {
           throw new Error('Text component children must resolve to strings.')
         }
@@ -337,7 +352,7 @@ function compressStyleObject(style: any): any {
   }
 
   // Flatten style if it's a StyleSheet reference or array
-  const flattened = StyleSheet.flatten(style)
+  const flattened = flattenStyle(style)
 
   const compressed: Record<string, any> = {}
 
@@ -584,4 +599,39 @@ export const renderVoltraToJson = (variants: VoltraVariants): VoltraJson => {
 
 export const renderVoltraToString = (variants: VoltraVariants): string => {
   return JSON.stringify(renderVoltraToJson(variants))
+}
+
+/**
+ * Widget size families supported by iOS
+ */
+export type WidgetFamily =
+  | 'systemSmall'
+  | 'systemMedium'
+  | 'systemLarge'
+  | 'systemExtraLarge'
+  | 'accessoryCircular'
+  | 'accessoryRectangular'
+  | 'accessoryInline'
+
+/**
+ * Widget variants following the same pattern as VoltraVariants.
+ * Each key corresponds to a widget family.
+ */
+export type WidgetVariants = Partial<Record<WidgetFamily, ReactNode>>
+
+/**
+ * Renders widget to a string that can be used for pre-rendering widget initial states.
+ */
+export const renderWidgetToString = (variants: WidgetVariants): string => {
+  const result: Record<string, any> = {
+    v: VOLTRA_PAYLOAD_VERSION,
+  }
+
+  for (const [family, content] of Object.entries(variants)) {
+    if (content !== undefined) {
+      result[family] = renderVoltraVariantToJson(content)
+    }
+  }
+
+  return JSON.stringify(result)
 }

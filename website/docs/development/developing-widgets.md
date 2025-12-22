@@ -11,7 +11,8 @@ For testing and development, Voltra provides a `VoltraWidgetPreview` component t
 - Developing widget content within your React Native app
 
 ```tsx
-import { VoltraWidgetPreview, Voltra } from 'voltra'
+import { VoltraWidgetPreview } from 'voltra/client'
+import { Voltra } from 'voltra'
 
 function MyWidgetPreview() {
   return (
@@ -58,7 +59,8 @@ Widget updates are throttled to around an update per minute. iOS limits how freq
 :::
 
 ```typescript
-import { updateWidget, Voltra } from 'voltra'
+import { updateWidget } from 'voltra/client'
+import { Voltra } from 'voltra'
 
 await updateWidget('weather', {
   systemSmall: <Voltra.Text>72°F</Voltra.Text>,
@@ -151,7 +153,7 @@ await updateWidget('minimal', {
 Force widget timelines to refresh their content after updating shared resources like preloaded images:
 
 ```typescript
-import { reloadWidgets } from 'voltra'
+import { reloadWidgets } from 'voltra/client'
 
 // Reload specific widgets
 await reloadWidgets(['weather', 'calendar'])
@@ -165,7 +167,7 @@ await reloadWidgets()
 Remove stored widget data, causing widgets to show their placeholder state:
 
 ```typescript
-import { clearWidget, clearAllWidgets } from 'voltra'
+import { clearWidget, clearAllWidgets } from 'voltra/client'
 
 // Clear specific widget
 await clearWidget('weather')

@@ -1,48 +1,8 @@
-import { ReactNode } from 'react'
+import { renderWidgetToString, type WidgetVariants } from './renderer/index.js'
+import { assertRunningOnApple } from './utils/assertRunningOnApple.js'
+import VoltraModule from './VoltraModule.js'
 
-import { renderVoltraVariantToJson, VOLTRA_PAYLOAD_VERSION } from './renderer'
-import { assertRunningOnApple } from './utils/assertRunningOnApple'
-import VoltraModule from './VoltraModule'
-
-/**
- * Render widget variants to JSON following the same pattern as live activities.
- */
-const renderWidgetVariantsToString = (variants: WidgetVariants): string => {
-  const result: Record<string, any> = {
-    v: VOLTRA_PAYLOAD_VERSION,
-  }
-
-  for (const [family, content] of Object.entries(variants)) {
-    if (content !== undefined) {
-      result[family] = renderVoltraVariantToJson(content)
-    }
-  }
-
-  return JSON.stringify(result)
-}
-
-/**
- * Widget size families supported by iOS
- */
-export type WidgetFamily =
-  | 'systemSmall'
-  | 'systemMedium'
-  | 'systemLarge'
-  | 'systemExtraLarge'
-  | 'accessoryCircular'
-  | 'accessoryRectangular'
-  | 'accessoryInline'
-
-/**
- * Widget variants following the same pattern as VoltraVariants.
- * Each key corresponds to a widget family.
- */
-export type WidgetVariants = Partial<Record<WidgetFamily, ReactNode>>
-
-/**
- * @deprecated Use WidgetVariants instead
- */
-export type WidgetContent = ReactNode | WidgetVariants
+export type { WidgetFamily, WidgetVariants } from './renderer/index.js'
 
 /**
  * Options for updating a home screen widget
@@ -92,7 +52,7 @@ export const updateWidget = async (
 ): Promise<void> => {
   if (!assertRunningOnApple()) return Promise.resolve()
 
-  const payload = renderWidgetVariantsToString(variants)
+  const payload = renderWidgetToString(variants)
 
   return VoltraModule.updateWidget(widgetId, payload, {
     deepLinkUrl: options?.deepLinkUrl,

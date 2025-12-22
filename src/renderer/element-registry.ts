@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-import { VoltraNodeJson } from '../types'
+import { VoltraNodeJson } from '../types.js'
 
 export type ElementRegistry = {
   /**

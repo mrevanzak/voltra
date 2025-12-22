@@ -9,7 +9,8 @@ Voltra changes all of that by providing a JavaScript-based API you can use to di
 Here's how simple it is to create a live activity:
 
 ```tsx
-import { startVoltra, Voltra } from 'voltra'
+import { startLiveActivity } from 'voltra/client'
+import { Voltra } from 'voltra'
 
 const activityUI = (
   <Voltra.VStack style={{ padding: 16, borderRadius: 18, backgroundColor: '#101828' }}>
@@ -21,12 +22,12 @@ const activityUI = (
 )
 
 // Start the live activity
-await startVoltra({
+await startLiveActivity({
   lockScreen: activityUI,
 })
 ```
 
-If you prefer using the hook API (`useVoltra`), you'll get live reloads for live activities, with changes appearing in milliseconds without manual restarts.
+If you prefer using the hook API (`useLiveActivity`), you'll get live reloads for live activities, with changes appearing in milliseconds without manual restarts.
 
 ## Server-side updates via push notifications
 
@@ -35,7 +36,8 @@ Voltra also supports server-side updates through push notifications. You can use
 The same components you use in your app work on the server:
 
 ```tsx
-import { renderVoltraToString, Voltra } from 'voltra/server'
+import { renderVoltraToString } from 'voltra/server'
+import { Voltra } from 'voltra'
 
 // Render JSX to JSON payload on your server
 const payload = renderVoltraToString({

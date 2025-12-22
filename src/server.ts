@@ -4,11 +4,12 @@
 import { promisify } from 'node:util'
 import { brotliCompress, constants } from 'node:zlib'
 
-import { ensurePayloadWithinBudget } from './payload'
-import { renderVoltraToString as render, type VoltraVariants } from './renderer'
+import { ensurePayloadWithinBudget } from './payload.js'
+import { renderVoltraToString as render, type VoltraVariants } from './renderer/index.js'
 
-export * as Voltra from './jsx/primitives'
-export type { VoltraVariants } from './renderer'
+export * as Voltra from './jsx/primitives.js'
+export type { VoltraVariants, WidgetVariants } from './renderer/index.js'
+export { renderWidgetToString } from './renderer/index.js'
 
 const brotliCompressAsync = promisify(brotliCompress)
 

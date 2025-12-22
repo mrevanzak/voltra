@@ -1,5 +1,5 @@
-import { createVoltraComponent } from './createVoltraComponent'
-import type { ImageProps as SwiftImageProps } from './props/Image'
+import { createVoltraComponent } from './createVoltraComponent.js'
+import type { ImageProps as SwiftImageProps } from './props/Image.js'
 
 export type ImageAssetSource = { assetName: string }
 export type ImageBase64Source = { base64: string }

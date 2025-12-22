@@ -8,6 +8,13 @@ import { Card } from '~/components/Card'
 
 const TESTING_GROUNDS_SECTIONS = [
   {
+    id: 'weather',
+    title: 'Weather Widget',
+    description:
+      'Test the weather widget with different conditions, gradients, and real-time updates. Change weather conditions and see the widget update instantly.',
+    route: '/testing-grounds/weather',
+  },
+  {
     id: 'styling',
     title: 'Styling',
     description:

@@ -30,7 +30,7 @@ public struct ${structName}: Widget {
   public init() {}
   
   public var body: some WidgetConfiguration {
-    StaticConfiguration(kind: "Voltra_Widget_${widget.id}", provider: VoltraHomeWidgetProvider(widgetId: widgetId)) { entry in
+    StaticConfiguration(kind: "Voltra_Widget_${widget.id}", provider: VoltraHomeWidgetProvider(widgetId: widgetId, initialState: VoltraWidgetInitialStates.getInitialState(for: widgetId))) { entry in
       VoltraHomeWidgetView(entry: entry)
     }
     .configurationDisplayName("${widget.displayName}")

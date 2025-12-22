@@ -1,6 +1,5 @@
-import { StyleSheet } from 'react-native'
-
-import { shorten } from '../payload/short-names'
+import { shorten } from '../payload/short-names.js'
+import { flattenStyle } from './flatten-styles.js'
 
 function compressStyleObject(style: any): any {
   if (style === null || style === undefined) {
@@ -8,7 +7,7 @@ function compressStyleObject(style: any): any {
   }
 
   // Flatten style if it's a StyleSheet reference or array
-  const flattened = StyleSheet.flatten(style)
+  const flattened = flattenStyle(style)
 
   const compressed: Record<string, any> = {}
 

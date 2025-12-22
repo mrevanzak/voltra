@@ -13,11 +13,14 @@ import Foundation
 
 public enum VoltraHomeWidgetStore {
   public static func readJson(widgetId: String) -> Data? {
-    guard let group = VoltraConfig.groupIdentifier(),
-          let defaults = UserDefaults(suiteName: group),
-          let jsonString = defaults.string(forKey: "Voltra_Widget_JSON_\(widgetId)")
-    else { return nil }
-    return jsonString.data(using: .utf8)
+    // Try runtime UserDefaults (from updateWidget calls)
+    if let group = VoltraConfig.groupIdentifier(),
+       let defaults = UserDefaults(suiteName: group),
+       let jsonString = defaults.string(forKey: "Voltra_Widget_JSON_\(widgetId)") {
+      return jsonString.data(using: .utf8)
+    }
+
+    return nil
   }
 
   public static func readDeepLinkUrl(widgetId: String) -> String? {
@@ -43,9 +46,11 @@ public struct VoltraHomeWidgetEntry: TimelineEntry {
 
 public struct VoltraHomeWidgetProvider: TimelineProvider {
   public let widgetId: String
-  
-  public init(widgetId: String) {
+  public let initialState: Data?
+
+  public init(widgetId: String, initialState: Data? = nil) {
     self.widgetId = widgetId
+    self.initialState = initialState
   }
 
   public func placeholder(in context: Context) -> VoltraHomeWidgetEntry {
@@ -53,12 +58,12 @@ public struct VoltraHomeWidgetProvider: TimelineProvider {
   }
 
   public func getSnapshot(in context: Context, completion: @escaping (VoltraHomeWidgetEntry) -> Void) {
-    let data = VoltraHomeWidgetStore.readJson(widgetId: widgetId)
+    let data = VoltraHomeWidgetStore.readJson(widgetId: widgetId) ?? initialState
     completion(VoltraHomeWidgetEntry(date: Date(), json: data, widgetId: widgetId))
   }
 
   public func getTimeline(in context: Context, completion: @escaping (Timeline<VoltraHomeWidgetEntry>) -> Void) {
-    let data = VoltraHomeWidgetStore.readJson(widgetId: widgetId)
+    let data = VoltraHomeWidgetStore.readJson(widgetId: widgetId) ?? initialState
     let entry = VoltraHomeWidgetEntry(date: Date(), json: data, widgetId: widgetId)
     completion(Timeline(entries: [entry], policy: .never))
   }

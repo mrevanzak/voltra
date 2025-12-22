@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react'
-import { addVoltraListener, useLiveActivity } from 'voltra'
+import { addVoltraListener, useLiveActivity } from 'voltra/client'
 
 import { MusicPlayerLiveActivityUI, SONGS } from '../../components/live-activities/MusicPlayerLiveActivityUI'
 import { LiveActivityExampleComponent } from './types'

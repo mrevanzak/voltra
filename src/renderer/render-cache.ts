@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 
-import { VoltraNodeJson } from '../types'
-import { VoltraVariantRenderer } from './types'
+import { VoltraNodeJson } from '../types.js'
+import { VoltraVariantRenderer } from './types.js'
 
 export type RenderCache = {
   getOrRender: VoltraVariantRenderer

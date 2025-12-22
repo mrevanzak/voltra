@@ -2,7 +2,6 @@ import { Stack } from 'expo-router'
 
 import { BackgroundWrapper } from '~/components/BackgroundWrapper'
 import { useVoltraEvents } from '~/hooks/useVoltraEvents'
-import { useVoltraWidgets } from '~/hooks/useVoltraWidgets'
 
 const STACK_SCREEN_OPTIONS = {
   headerShown: false,
@@ -15,7 +14,6 @@ export const unstable_settings = {
 
 export default function Layout() {
   useVoltraEvents()
-  useVoltraWidgets()
 
   return (
     <Stack
@@ -32,7 +30,6 @@ export default function Layout() {
       />
       <Stack.Screen name="live-activities" />
       <Stack.Screen name="testing-grounds" />
-      <Stack.Screen name="widget-playground" />
       <Stack.Screen name="+not-found" />
     </Stack>
   )

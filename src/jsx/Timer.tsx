@@ -1,6 +1,6 @@
-import { VoltraTextStyleProp } from '../styles/types'
-import { createVoltraComponent } from './createVoltraComponent'
-import type { TimerProps as SwiftTimerProps } from './props/Timer'
+import { VoltraTextStyleProp } from '../styles/types.js'
+import { createVoltraComponent } from './createVoltraComponent.js'
+import type { TimerProps as SwiftTimerProps } from './props/Timer.js'
 
 export type TimerProps = Omit<SwiftTimerProps, 'style'> & {
   style?: VoltraTextStyleProp

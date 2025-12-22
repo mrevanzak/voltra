@@ -2,7 +2,7 @@ import { Link } from 'expo-router'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { endAllLiveActivities } from 'voltra'
+import { endAllLiveActivities } from 'voltra/client'
 
 import { Button } from '~/components/Button'
 import { Card } from '~/components/Card'
@@ -167,9 +167,6 @@ export default function LiveActivitiesScreen() {
         <View style={styles.navigationButtons}>
           <Link href="/testing-grounds" asChild>
             <Button title="Testing Grounds" variant="secondary" />
-          </Link>
-          <Link href="/widget-playground" asChild>
-            <Button title="Widget Playground" variant="secondary" />
           </Link>
         </View>
 

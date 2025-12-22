@@ -1,5 +1,5 @@
-import { assertRunningOnApple } from './utils'
-import VoltraModule from './VoltraModule'
+import { assertRunningOnApple } from './utils/index.js'
+import VoltraModule from './VoltraModule.js'
 
 export type EventSubscription = {
   remove: () => void
