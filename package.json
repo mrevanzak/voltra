@@ -16,7 +16,9 @@
     "./server": {
       "types": "./build/server.d.ts",
       "default": "./build/server.js"
-    }
+    },
+    "./app.plugin.js": "./app.plugin.js",
+    "./expo-module.config.json": "./expo-module.config.json"
   },
   "scripts": {
     "build": "expo-module build",
