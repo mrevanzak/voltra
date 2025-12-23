@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
 
-import { WidgetFamily } from '../widget-api.js'
+import { WidgetFamily } from '../widgets/types.js'
 import { VoltraView, VoltraViewProps } from './VoltraView.js'
 
 /**

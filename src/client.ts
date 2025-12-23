@@ -13,8 +13,7 @@ export { VoltraView, type VoltraViewProps } from './components/VoltraView.js'
 export { VoltraWidgetPreview, type VoltraWidgetPreviewProps } from './components/VoltraWidgetPreview.js'
 
 // Renderer API
-export type { VoltraVariants } from './renderer/index.js'
-export type { VoltraElementJson, VoltraJson, VoltraNodeJson, VoltraVariantsJson } from './types.js'
+export type { VoltraElementJson, VoltraNodeJson } from './types.js'
 
 // Preload API
 export {
@@ -39,15 +38,15 @@ export {
   useLiveActivity,
   type UseLiveActivityOptions,
   type UseLiveActivityResult,
-} from './liveactivity-api.js'
+} from './live-activity/api.js'
+export type { DismissalPolicy, LiveActivityVariants } from './live-activity/types.js'
 
 // Widget API
+export type { WidgetFamily, WidgetVariants } from './widgets/types.js'
 export {
   clearAllWidgets,
   clearWidget,
   reloadWidgets,
   updateWidget,
   type UpdateWidgetOptions,
-  type WidgetFamily,
-  type WidgetVariants,
-} from './widget-api.js'
+} from './widgets/widget-api.js'

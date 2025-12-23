@@ -2,7 +2,7 @@ import { randomBytes } from 'node:crypto'
 
 import React from 'react'
 
-import { renderVoltraToString, Voltra } from '../server'
+import { renderLiveActivityToString, Voltra } from '../server.js'
 
 /**
  * Payload Budget Tests
@@ -30,7 +30,7 @@ describe('Payload budget validation', () => {
       ),
     }
 
-    await expect(renderVoltraToString(variants)).rejects.toThrow(/exceeds safe budget/)
+    await expect(renderLiveActivityToString(variants)).rejects.toThrow(/exceeds safe budget/)
   })
 
   it('accepts payloads within budget', async () => {
@@ -43,6 +43,6 @@ describe('Payload budget validation', () => {
       ),
     }
 
-    await expect(renderVoltraToString(variants)).resolves.toBeDefined()
+    await expect(renderLiveActivityToString(variants)).resolves.toBeDefined()
   })
 })

@@ -1,8 +1,7 @@
-import { renderWidgetToString, type WidgetVariants } from './renderer/index.js'
-import { assertRunningOnApple } from './utils/assertRunningOnApple.js'
-import VoltraModule from './VoltraModule.js'
-
-export type { WidgetFamily, WidgetVariants } from './renderer/index.js'
+import { assertRunningOnApple } from '../utils/assertRunningOnApple.js'
+import VoltraModule from '../VoltraModule.js'
+import { renderWidgetToString } from './renderer.js'
+import { WidgetVariants } from './types.js'
 
 /**
  * Options for updating a home screen widget

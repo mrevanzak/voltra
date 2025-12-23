@@ -4,12 +4,13 @@
 import { promisify } from 'node:util'
 import { brotliCompress, constants } from 'node:zlib'
 
+import { renderLiveActivityToString as render } from './live-activity/renderer.js'
+import type { LiveActivityVariants } from './live-activity/types.js'
 import { ensurePayloadWithinBudget } from './payload.js'
-import { renderVoltraToString as render, type VoltraVariants } from './renderer/index.js'
 
 export * as Voltra from './jsx/primitives.js'
-export type { VoltraVariants, WidgetVariants } from './renderer/index.js'
-export { renderWidgetToString } from './renderer/index.js'
+export { renderWidgetToString } from './widgets/renderer.js'
+export type { WidgetVariants } from './widgets/types.js'
 
 const brotliCompressAsync = promisify(brotliCompress)
 
@@ -29,7 +30,7 @@ const compressPayload = async (jsonString: string): Promise<string> => {
   return compressedBuffer.toString('base64')
 }
 
-export const renderVoltraToString = async (variants: VoltraVariants): Promise<string> => {
+export const renderLiveActivityToString = async (variants: LiveActivityVariants): Promise<string> => {
   const jsonString = render(variants)
   const compressedBase64 = await compressPayload(jsonString)
   ensurePayloadWithinBudget(compressedBase64)

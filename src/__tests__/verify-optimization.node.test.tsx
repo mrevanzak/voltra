@@ -1,10 +1,10 @@
 import React from 'react'
 
-import { renderVoltraToJson } from '../renderer/renderer'
-import { Voltra } from '../server'
+import { renderLiveActivityToJson } from '../live-activity/renderer.js'
+import { Voltra } from '../server.js'
 
 test('verifies empty p and c are omitted', () => {
-  const result = renderVoltraToJson({
+  const result = renderLiveActivityToJson({
     lockScreen: (
       <Voltra.VStack>
         <Voltra.Text>Hello</Voltra.Text>

@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { addVoltraListener } from './events.js'
-import { logger } from './logger.js'
-import { renderVoltraToString, VoltraVariants } from './renderer/index.js'
-import type { DismissalPolicy } from './types.js'
-import { assertRunningOnApple, useUpdateOnHMR } from './utils/index.js'
-import VoltraModule from './VoltraModule.js'
+import { addVoltraListener } from '../events.js'
+import { logger } from '../logger.js'
+import { assertRunningOnApple, useUpdateOnHMR } from '../utils/index.js'
+import VoltraModule from '../VoltraModule.js'
+import { renderLiveActivityToString } from './renderer.js'
+import type { DismissalPolicy, LiveActivityVariants } from './types.js'
 
 export type SharedLiveActivityOptions = {
   /**
@@ -126,7 +126,10 @@ const normalizeSharedLiveActivityOptions = (
  * }
  * ```
  */
-export const useLiveActivity = (variants: VoltraVariants, options?: UseLiveActivityOptions): UseLiveActivityResult => {
+export const useLiveActivity = (
+  variants: LiveActivityVariants,
+  options?: UseLiveActivityOptions
+): UseLiveActivityResult => {
   const [targetId, setTargetId] = useState<string | null>(() => {
     if (options?.activityName) {
       return isLiveActivityActive(options.activityName) ? options.activityName : null
@@ -239,12 +242,12 @@ export const useLiveActivity = (variants: VoltraVariants, options?: UseLiveActiv
  * ```
  */
 export const startLiveActivity = async (
-  variants: VoltraVariants,
+  variants: LiveActivityVariants,
   options?: StartLiveActivityOptions
 ): Promise<string> => {
   if (!assertRunningOnApple()) return Promise.resolve('')
 
-  const payload = renderVoltraToString(variants)
+  const payload = renderLiveActivityToString(variants)
 
   const normalizedSharedOptions = normalizeSharedLiveActivityOptions(options)
   const targetId = await VoltraModule.startLiveActivity(payload, {
@@ -278,12 +281,12 @@ export const startLiveActivity = async (
  */
 export const updateLiveActivity = async (
   targetId: string,
-  variants: VoltraVariants,
+  variants: LiveActivityVariants,
   options?: UpdateLiveActivityOptions
 ): Promise<void> => {
   if (!assertRunningOnApple()) return Promise.resolve()
 
-  const payload = renderVoltraToString(variants)
+  const payload = renderLiveActivityToString(variants)
 
   const normalizedSharedOptions = normalizeSharedLiveActivityOptions(options)
   return VoltraModule.updateLiveActivity(targetId, payload, normalizedSharedOptions)

@@ -26,14 +26,13 @@ import {
 import { isVoltraComponent } from '../jsx/createVoltraComponent.js'
 import { getComponentId } from '../payload/component-ids.js'
 import { shorten } from '../payload/short-names.js'
-import { VoltraElementJson, VoltraElementRef, VoltraJson, VoltraNodeJson, VoltraPropValue } from '../types.js'
+import { VoltraElementJson, VoltraElementRef, VoltraNodeJson, VoltraPropValue } from '../types.js'
 import { ContextRegistry, getContextRegistry } from './context-registry.js'
 import { getHooksDispatcher, getReactCurrentDispatcher } from './dispatcher.js'
 import { createElementRegistry, type ElementRegistry, preScanForDuplicates } from './element-registry.js'
 import { flattenStyle } from './flatten-styles.js'
-import { getRenderCache } from './render-cache.js'
+import { getRenderCache, type RenderCache } from './render-cache.js'
 import { createStylesheetRegistry, type StylesheetRegistry } from './stylesheet-registry.js'
-import { VoltraVariants } from './types.js'
 
 type VoltraRenderingContext = {
   registry: ContextRegistry
@@ -437,190 +436,116 @@ export function transformProps(
 export const VOLTRA_PAYLOAD_VERSION = 1
 
 /**
- * Collect all variant nodes for pre-scanning
+ * Factory function that creates a Voltra renderer instance.
+ * The renderer is agnostic of whether it's used for live activities or widgets.
  */
-const collectVariantNodes = (variants: VoltraVariants): ReactNode[] => {
-  const nodes: ReactNode[] = []
+export const createVoltraRenderer = () => {
+  // Collect all root nodes for pre-scanning
+  const rootNodes: { name: string; node: ReactNode }[] = []
 
-  if (variants.lockScreen) {
-    const lockScreenVariant = variants.lockScreen
-    if (typeof lockScreenVariant === 'object' && lockScreenVariant !== null && 'content' in lockScreenVariant) {
-      if (lockScreenVariant.content) nodes.push(lockScreenVariant.content)
-    } else {
-      nodes.push(lockScreenVariant as ReactNode)
+  // Track duplicates across all nodes
+  let duplicates: Set<ReactNode> | undefined
+
+  // Create shared registries (will be initialized when render is called)
+  let stylesheetRegistry: StylesheetRegistry | undefined
+  let elementRegistry: ElementRegistry | undefined
+  let renderCache: RenderCache | undefined
+
+  /**
+   * Add a root node variant to be rendered.
+   * @param name - The name/key for this variant (e.g., 'ls', 'isl_exp_c', 'systemSmall')
+   * @param node - The React node to render
+   */
+  const addRootNode = (name: string, node: ReactNode): void => {
+    if (node === null || node === undefined) {
+      return
     }
+    rootNodes.push({ name, node })
   }
 
-  if (variants.island) {
-    if (variants.island.expanded) {
-      if (variants.island.expanded.center) nodes.push(variants.island.expanded.center)
-      if (variants.island.expanded.leading) nodes.push(variants.island.expanded.leading)
-      if (variants.island.expanded.trailing) nodes.push(variants.island.expanded.trailing)
-      if (variants.island.expanded.bottom) nodes.push(variants.island.expanded.bottom)
-    }
-    if (variants.island.compact) {
-      if (variants.island.compact.leading) nodes.push(variants.island.compact.leading)
-      if (variants.island.compact.trailing) nodes.push(variants.island.compact.trailing)
-    }
-    if (variants.island.minimal) nodes.push(variants.island.minimal)
-  }
+  /**
+   * Pre-scan all root nodes to identify duplicate elements (by reference)
+   */
+  const preScanAllNodes = (): Set<ReactNode> => {
+    const seen = new Set<ReactNode>()
+    const duplicatesSet = new Set<ReactNode>()
 
-  return nodes
-}
+    for (const { node } of rootNodes) {
+      // Check if the root node itself is duplicated across variants
+      if (node && typeof node === 'object') {
+        if (seen.has(node)) {
+          duplicatesSet.add(node)
+        } else {
+          seen.add(node)
+        }
+      }
 
-/**
- * Pre-scan all variant nodes to identify duplicate elements across the entire payload
- */
-const preScanAllVariants = (variants: VoltraVariants): Set<ReactNode> => {
-  const seen = new Set<ReactNode>()
-  const duplicates = new Set<ReactNode>()
-
-  const nodes = collectVariantNodes(variants)
-
-  // Scan each variant node for duplicates
-  for (const node of nodes) {
-    // Also check if the root node itself is duplicated across variants
-    if (node && typeof node === 'object') {
-      if (seen.has(node)) {
-        duplicates.add(node)
-      } else {
-        seen.add(node)
+      // Scan children for duplicates
+      const nodeDuplicates = preScanForDuplicates(node)
+      for (const dup of nodeDuplicates) {
+        duplicatesSet.add(dup)
       }
     }
 
-    // Scan children for duplicates
-    const nodeDuplicates = preScanForDuplicates(node)
-    for (const dup of nodeDuplicates) {
-      duplicates.add(dup)
-    }
+    return duplicatesSet
   }
 
-  return duplicates
-}
+  /**
+   * Render all added root nodes and return the final JSON payload.
+   * @returns The rendered JSON object with version and all variants
+   */
+  const render = (): Record<string, any> => {
+    // Initialize registries
+    stylesheetRegistry = createStylesheetRegistry()
+    elementRegistry = createElementRegistry()
 
-export const renderVoltraToJson = (variants: VoltraVariants): VoltraJson => {
-  const result: VoltraJson = {
-    v: VOLTRA_PAYLOAD_VERSION,
-  }
+    // Pre-scan for duplicates
+    duplicates = preScanAllNodes()
 
-  // Pre-scan all variants to identify duplicate elements (by reference)
-  const duplicates = preScanAllVariants(variants)
-
-  // Create shared registries for all variants
-  const stylesheetRegistry = createStylesheetRegistry()
-  const elementRegistry = createElementRegistry()
-
-  const renderVariantToJson = (element: ReactNode): VoltraNodeJson => {
-    const registry = getContextRegistry()
-    const context: VoltraRenderingContext = {
-      registry,
-      stylesheetRegistry,
-      elementRegistry,
-      duplicates,
-    }
-    return renderNode(element, context)
-  }
-
-  const renderCache = getRenderCache(renderVariantToJson)
-
-  if (variants.lockScreen) {
-    const lockScreenVariant = variants.lockScreen
-
-    if (typeof lockScreenVariant === 'object' && lockScreenVariant !== null && 'content' in lockScreenVariant) {
-      result.ls = renderCache.getOrRender(lockScreenVariant.content)
-
-      if (lockScreenVariant.activityBackgroundTint) {
-        result.ls_background_tint = lockScreenVariant.activityBackgroundTint
+    // Create renderer function with context
+    const renderVariantToJson = (element: ReactNode): VoltraNodeJson => {
+      const registry = getContextRegistry()
+      const context: VoltraRenderingContext = {
+        registry,
+        stylesheetRegistry,
+        elementRegistry,
+        duplicates,
       }
-    } else {
-      result.ls = renderCache.getOrRender(lockScreenVariant as ReactNode)
-    }
-  }
-
-  if (variants.island) {
-    if (variants.island.keylineTint) {
-      result.isl_keyline_tint = variants.island.keylineTint
+      return renderNode(element, context)
     }
 
-    if (variants.island.expanded) {
-      if (variants.island.expanded.center) {
-        result.isl_exp_c = renderCache.getOrRender(variants.island.expanded.center)
-      }
-      if (variants.island.expanded.leading) {
-        result.isl_exp_l = renderCache.getOrRender(variants.island.expanded.leading)
-      }
-      if (variants.island.expanded.trailing) {
-        result.isl_exp_t = renderCache.getOrRender(variants.island.expanded.trailing)
-      }
-      if (variants.island.expanded.bottom) {
-        result.isl_exp_b = renderCache.getOrRender(variants.island.expanded.bottom)
+    // Create render cache
+    renderCache = getRenderCache(renderVariantToJson)
+
+    // Build result object
+    const result: Record<string, any> = {
+      v: VOLTRA_PAYLOAD_VERSION,
+    }
+
+    // Render all root nodes
+    for (const { name, node } of rootNodes) {
+      if (node !== null && node !== undefined) {
+        result[name] = renderCache.getOrRender(node)
       }
     }
 
-    if (variants.island.compact) {
-      if (variants.island.compact.leading) {
-        result.isl_cmp_l = renderCache.getOrRender(variants.island.compact.leading)
-      }
-      if (variants.island.compact.trailing) {
-        result.isl_cmp_t = renderCache.getOrRender(variants.island.compact.trailing)
-      }
+    // Add shared elements at the root level (for deduplication)
+    const sharedElements = elementRegistry.getElements()
+    if (sharedElements.length > 0) {
+      result.e = sharedElements
     }
 
-    if (variants.island.minimal) {
-      result.isl_min = renderCache.getOrRender(variants.island.minimal)
+    // Add the shared stylesheet at the root level
+    const styles = stylesheetRegistry.getStyles()
+    if (styles.length > 0) {
+      result.s = styles
     }
+
+    return result
   }
 
-  // Add shared elements at the root level (for deduplication)
-  const sharedElements = elementRegistry.getElements()
-  if (sharedElements.length > 0) {
-    result.e = sharedElements
+  return {
+    addRootNode,
+    render,
   }
-
-  // Add the shared stylesheet at the root level
-  const styles = stylesheetRegistry.getStyles()
-  if (styles.length > 0) {
-    result.s = styles
-  }
-
-  return result
-}
-
-export const renderVoltraToString = (variants: VoltraVariants): string => {
-  return JSON.stringify(renderVoltraToJson(variants))
-}
-
-/**
- * Widget size families supported by iOS
- */
-export type WidgetFamily =
-  | 'systemSmall'
-  | 'systemMedium'
-  | 'systemLarge'
-  | 'systemExtraLarge'
-  | 'accessoryCircular'
-  | 'accessoryRectangular'
-  | 'accessoryInline'
-
-/**
- * Widget variants following the same pattern as VoltraVariants.
- * Each key corresponds to a widget family.
- */
-export type WidgetVariants = Partial<Record<WidgetFamily, ReactNode>>
-
-/**
- * Renders widget to a string that can be used for pre-rendering widget initial states.
- */
-export const renderWidgetToString = (variants: WidgetVariants): string => {
-  const result: Record<string, any> = {
-    v: VOLTRA_PAYLOAD_VERSION,
-  }
-
-  for (const [family, content] of Object.entries(variants)) {
-    if (content !== undefined) {
-      result[family] = renderVoltraVariantToJson(content)
-    }
-  }
-
-  return JSON.stringify(result)
 }

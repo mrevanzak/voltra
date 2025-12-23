@@ -1,11 +1,11 @@
 import React from 'react'
 
-import { Voltra } from '../index'
-import { renderVoltraToJson } from '../renderer'
+import { Voltra } from '../index.js'
+import { renderLiveActivityToJson } from '../live-activity/renderer.js'
 
-describe('renderVoltraToJson variants', () => {
+describe('renderLiveActivityToJson variants', () => {
   it('renders all Dynamic Island regions', async () => {
-    const result = await renderVoltraToJson({
+    const result = await renderLiveActivityToJson({
       lockScreen: <Voltra.Text>Lock</Voltra.Text>,
       island: {
         expanded: {

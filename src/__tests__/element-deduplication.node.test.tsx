@@ -1,14 +1,14 @@
 import React from 'react'
 
-import { renderVoltraToJson } from '../renderer/renderer'
-import { Voltra } from '../server'
+import { renderLiveActivityToJson } from '../live-activity/renderer.js'
+import { Voltra } from '../server.js'
 
 describe('Element Deduplication', () => {
   it('should deduplicate the same element used multiple times', () => {
     // Create a single element that we'll reuse
     const sharedText = <Voltra.Text>Shared content</Voltra.Text>
 
-    const result = renderVoltraToJson({
+    const result = renderLiveActivityToJson({
       lockScreen: (
         <Voltra.VStack>
           {sharedText}
@@ -31,7 +31,7 @@ describe('Element Deduplication', () => {
   })
 
   it('should not deduplicate elements that appear only once', () => {
-    const result = renderVoltraToJson({
+    const result = renderLiveActivityToJson({
       lockScreen: (
         <Voltra.VStack>
           <Voltra.Text>First</Voltra.Text>
@@ -56,7 +56,7 @@ describe('Element Deduplication', () => {
   it('should deduplicate elements across different variants', () => {
     const sharedText = <Voltra.Text>Shared across variants</Voltra.Text>
 
-    const result = renderVoltraToJson({
+    const result = renderLiveActivityToJson({
       lockScreen: sharedText,
       island: {
         minimal: sharedText,
@@ -82,7 +82,7 @@ describe('Element Deduplication', () => {
       </Voltra.VStack>
     )
 
-    const result = renderVoltraToJson({
+    const result = renderLiveActivityToJson({
       lockScreen: (
         <Voltra.HStack>
           {sharedContainer}
@@ -102,7 +102,7 @@ describe('Element Deduplication', () => {
   it('should handle deeply nested duplicate elements', () => {
     const leaf = <Voltra.Text>Leaf</Voltra.Text>
 
-    const result = renderVoltraToJson({
+    const result = renderLiveActivityToJson({
       lockScreen: (
         <Voltra.VStack>
           <Voltra.HStack>
@@ -123,7 +123,7 @@ describe('Element Deduplication', () => {
   it('should work with complex components', () => {
     const sharedImage = <Voltra.Symbol name="star.fill" />
 
-    const result = renderVoltraToJson({
+    const result = renderLiveActivityToJson({
       lockScreen: (
         <Voltra.HStack>
           {sharedImage}
@@ -153,7 +153,7 @@ describe('Element Deduplication', () => {
     )
 
     // Payload with deduplication
-    const withDedup = renderVoltraToJson({
+    const withDedup = renderLiveActivityToJson({
       lockScreen: (
         <Voltra.HStack>
           {sharedElement}
@@ -164,7 +164,7 @@ describe('Element Deduplication', () => {
     })
 
     // Create equivalent payload without deduplication (different element instances)
-    const withoutDedup = renderVoltraToJson({
+    const withoutDedup = renderLiveActivityToJson({
       lockScreen: (
         <Voltra.HStack>
           <Voltra.VStack>
@@ -191,7 +191,7 @@ describe('Element Deduplication', () => {
   })
 
   it('should preserve payload version', () => {
-    const result = renderVoltraToJson({
+    const result = renderLiveActivityToJson({
       lockScreen: <Voltra.Text>Hello</Voltra.Text>,
     })
 

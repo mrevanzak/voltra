@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { renderVoltraToJson } from '../renderer/renderer'
-import { Voltra } from '../server'
+import { renderLiveActivityToJson } from '../live-activity/renderer.js'
+import { Voltra } from '../server.js'
 
 describe('Stylesheet Deduplication', () => {
   describe('Basic Stylesheet Functionality', () => {
@@ -12,7 +12,7 @@ describe('Stylesheet Deduplication', () => {
         fontWeight: 'bold',
       } as const
 
-      const result = renderVoltraToJson({
+      const result = renderLiveActivityToJson({
         lockScreen: (
           <Voltra.VStack>
             <Voltra.Text style={sharedStyle}>Text 1</Voltra.Text>
@@ -38,7 +38,7 @@ describe('Stylesheet Deduplication', () => {
         padding: 10,
       }
 
-      const result = renderVoltraToJson({
+      const result = renderLiveActivityToJson({
         lockScreen: (
           <Voltra.VStack>
             <Voltra.Text style={sharedStyle}>Text 1</Voltra.Text>
@@ -64,7 +64,7 @@ describe('Stylesheet Deduplication', () => {
       const style2 = { color: '#00FF00', fontSize: 18 }
       const style3 = { color: '#0000FF', fontSize: 20 }
 
-      const result = renderVoltraToJson({
+      const result = renderLiveActivityToJson({
         lockScreen: (
           <Voltra.VStack>
             <Voltra.Text style={style1}>Text 1</Voltra.Text>
@@ -87,7 +87,7 @@ describe('Stylesheet Deduplication', () => {
     it('should handle mixed styled and unstyled elements', () => {
       const sharedStyle = { fontSize: 14, color: '#333333' }
 
-      const result = renderVoltraToJson({
+      const result = renderLiveActivityToJson({
         lockScreen: (
           <Voltra.VStack>
             <Voltra.Text>Unstyled Text</Voltra.Text>
@@ -123,7 +123,7 @@ describe('Stylesheet Deduplication', () => {
         shadowRadius: 4,
       }
 
-      const result = renderVoltraToJson({
+      const result = renderLiveActivityToJson({
         lockScreen: <Voltra.Text style={complexStyle}>Complex Style</Voltra.Text>,
       })
 
@@ -149,7 +149,7 @@ describe('Stylesheet Deduplication', () => {
     it('should share stylesheet between all variants', () => {
       const sharedStyle = { color: '#FF0000' }
 
-      const result = renderVoltraToJson({
+      const result = renderLiveActivityToJson({
         lockScreen: <Voltra.Text style={sharedStyle}>LockScreen</Voltra.Text>,
         island: {
           expanded: {
@@ -177,7 +177,7 @@ describe('Stylesheet Deduplication', () => {
       const style1 = { color: '#FF0000', fontSize: 16 }
       const style2 = { color: '#00FF00', fontSize: 18 }
 
-      const result = renderVoltraToJson({
+      const result = renderLiveActivityToJson({
         lockScreen: (
           <Voltra.VStack>
             <Voltra.Text style={style1}>Text 1</Voltra.Text>
@@ -212,7 +212,7 @@ describe('Stylesheet Deduplication', () => {
       const style2 = { color: '#00FF00' }
       const style3 = { color: '#0000FF' }
 
-      const result = renderVoltraToJson({
+      const result = renderLiveActivityToJson({
         island: {
           expanded: {
             center: <Voltra.Text style={style1}>Center</Voltra.Text>,
@@ -260,7 +260,7 @@ describe('Stylesheet Deduplication', () => {
         </Voltra.VStack>
       )
 
-      const result = renderVoltraToJson({
+      const result = renderLiveActivityToJson({
         lockScreen: componentWithRepeatedStyles,
       })
 
@@ -281,7 +281,7 @@ describe('Stylesheet Deduplication', () => {
     })
 
     it('should not create stylesheet when no styles are used', () => {
-      const result = renderVoltraToJson({
+      const result = renderLiveActivityToJson({
         lockScreen: (
           <Voltra.VStack>
             <Voltra.Text>Plain Text 1</Voltra.Text>
@@ -294,7 +294,7 @@ describe('Stylesheet Deduplication', () => {
     })
 
     it('should handle empty stylesheet gracefully', () => {
-      const result = renderVoltraToJson({
+      const result = renderLiveActivityToJson({
         lockScreen: <Voltra.Text>No Style</Voltra.Text>,
       })
 
@@ -307,7 +307,7 @@ describe('Stylesheet Deduplication', () => {
       const sharedStyle = { backgroundColor: '#FFFFFF', borderRadius: 8 }
       const contentStyle = { height: 8, borderRadius: 8 }
 
-      const result = renderVoltraToJson({
+      const result = renderLiveActivityToJson({
         lockScreen: (
           <Voltra.Mask
             maskElement={
@@ -344,7 +344,7 @@ describe('Stylesheet Deduplication', () => {
     it('should deduplicate styles across main content and component props', () => {
       const sharedStyle = { backgroundColor: '#FF0000', borderRadius: 8 }
 
-      const result = renderVoltraToJson({
+      const result = renderLiveActivityToJson({
         lockScreen: (
           <Voltra.Mask
             maskElement={

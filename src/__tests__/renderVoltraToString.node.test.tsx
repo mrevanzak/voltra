@@ -1,7 +1,7 @@
 import React, { ElementType, Suspense } from 'react'
 
-import { renderVoltraVariantToJson } from '../renderer/renderer'
-import { Voltra } from '../server'
+import { renderVoltraVariantToJson } from '../renderer/renderer.js'
+import { Voltra } from '../server.js'
 
 describe('renderVoltraVariantToJson', () => {
   it('should render a simple text component', () => {

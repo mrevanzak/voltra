@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { BasicLiveActivityUI } from '../../example/components/live-activities/BasicLiveActivityUI'
-import { MusicPlayerLiveActivityUI } from '../../example/components/live-activities/MusicPlayerLiveActivityUI'
-import { renderVoltraToString } from '../server'
+import { BasicLiveActivityUI } from '../../example/components/live-activities/BasicLiveActivityUI.js'
+import { MusicPlayerLiveActivityUI } from '../../example/components/live-activities/MusicPlayerLiveActivityUI.js'
+import { renderLiveActivityToString } from '../server.js'
 
 /**
  * Payload Size Regression Tests
@@ -14,8 +14,8 @@ import { renderVoltraToString } from '../server'
  * - Size increased? Investigate before updating - is the increase justified?
  */
 
-const getPayloadSize = async (variants: Parameters<typeof renderVoltraToString>[0]): Promise<number> => {
-  const compressedPayload = await renderVoltraToString(variants)
+const getPayloadSize = async (variants: Parameters<typeof renderLiveActivityToString>[0]): Promise<number> => {
+  const compressedPayload = await renderLiveActivityToString(variants)
   return compressedPayload.length
 }
 
