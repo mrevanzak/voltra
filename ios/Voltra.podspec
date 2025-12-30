@@ -28,20 +28,35 @@ Pod::Spec.new do |s|
   # Core subspec: React Native bridge module
   s.subspec 'Core' do |ss|
     ss.dependency 'ExpoModulesCore'
+    ss.dependency 'Voltra/Shared'
+    ss.dependency 'Voltra/UI'
 
     ss.source_files = [
       "app/**/*.swift",
-      "shared/**/*.swift",
-      "ui/**/*.swift",  # Add shared UI code
     ]
   end
 
   # Widget subspec: Widget extension code
   s.subspec 'Widget' do |ss|
+    ss.dependency 'Voltra/Shared'
+    ss.dependency 'Voltra/UI'
+
     ss.source_files = [
-      "shared/**/*.swift",
-      "ui/**/*.swift",     # Add shared UI code
       "target/**/*.swift", # Widget-specific files only
+    ]
+  end
+
+  s.subspec 'UI' do |ss|
+    ss.dependency 'Voltra/Shared'
+
+    ss.source_files = [
+      "ui/**/*.swift"
+    ]
+  end
+
+  s.subspec 'Shared' do |ss|
+    ss.source_files = [
+      "shared/**/*.swift"
     ]
   end
 end
