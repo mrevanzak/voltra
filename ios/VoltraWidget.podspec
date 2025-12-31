@@ -3,10 +3,10 @@ require 'json'
 package = JSON.parse(File.read(File.join(__dir__, '..', 'package.json')))
 
 Pod::Spec.new do |s|
-  s.name           = 'Voltra'
+  s.name           = 'VoltraWidget'
   s.version        = package['version']
   s.summary        = package['description']
-  s.description    = 'Build dynamic iOS Live Activities and interact with the Dynamic Island directly from React Native. No Swift, no Xcode, no hassle.'
+  s.description    = 'Voltra Widget Extension support.'
   s.license        = package['license']
   s.author         = package['author']
   s.homepage       = package['homepage']
@@ -22,11 +22,9 @@ Pod::Spec.new do |s|
     'DEFINES_MODULE' => 'YES',
   }
 
-  s.dependency 'ExpoModulesCore'
-
   s.source_files = [
-    "app/**/*.swift",
     "ui/**/*.swift",
     "shared/**/*.swift",
+    "target/**/*.swift",
   ]
 end

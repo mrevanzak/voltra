@@ -23,7 +23,7 @@ target '${targetName}' do
   voltra_module = JSON.parse(${backtick}npx expo-modules-autolinking search -p apple --json --project-root #{project_root}${backtick})
   podspec_dir_path = Pathname.new(File.join(voltra_module['${libraryName}']['path'], 'ios')).relative_path_from(Pathname.new(__dir__)).to_path
   
-  pod 'Voltra/Widget', :path => podspec_dir_path
+  pod 'VoltraWidget', :path => podspec_dir_path
 end`
 }
 

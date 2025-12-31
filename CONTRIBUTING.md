@@ -32,7 +32,7 @@ The Expo plugin in `plugin/src/` handles all Xcode project setup during `expo pr
 
 1. **Creates the widget extension target** with proper build settings
 2. **Copies template files** from `ios-files/` (widget bundle, assets, Info.plist) into the extension target
-3. **Configures CocoaPods** to include the `Voltra/Widget` subspec in the extension target
+3. **Configures CocoaPods** to include the `VoltraWidget` subspec in the extension target
 4. **Sets up entitlements** for App Groups (optional, for event forwarding)
 5. **Configures push notifications** (optional)
 

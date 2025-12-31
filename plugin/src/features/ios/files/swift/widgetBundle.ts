@@ -58,7 +58,7 @@ export function generateWidgetBundleSwift(widgets: WidgetConfig[]): string {
 
     import SwiftUI
     import WidgetKit
-    import Voltra
+    import VoltraWidget
 
     @main
     struct VoltraWidgetBundle: WidgetBundle {
@@ -92,7 +92,7 @@ export function generateDefaultWidgetBundleSwift(): string {
 
     import SwiftUI
     import WidgetKit
-    import Voltra  // Import Voltra widgets
+    import VoltraWidget  // Import Voltra widgets
 
     @main
     struct VoltraWidgetBundle: WidgetBundle {
