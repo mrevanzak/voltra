@@ -84,13 +84,15 @@ export function OrderTracker({ orderId }: { orderId: string }) {
 
 **Note:** This module is intended for use on **iOS devices only**.
 
-## Made with ❤️ at Callstack
+## Authors
 
-`voltra` is an open source project and will always remain free to use. If you think it's cool, please star it 🌟.
+`voltra` is an open source collaboration between [Saúl Sharma](https://github.com/saul-sharma) and [Szymon Chmal](https://github.com/szymonchmal) at [Callstack][callstack-readme-with-love].
+
+If you think it's cool, please star it 🌟. This project will always remain free to use.
 
 [Callstack][callstack-readme-with-love] is a group of React and React Native geeks, contact us at [hello@callstack.com](mailto:hello@callstack.com) if you need any help with these or just want to say hi!
 
-Like the project? ⚛️ [Join the team](https://callstack.com/careers/?utm_campaign=Senior_RN&utm_source=github&utm_medium=readme) who does amazing stuff for clients and drives React Native Open Source! 🔥
+Like the project? ⚛️ [Join the Callstack team](https://callstack.com/careers/?utm_campaign=Senior_RN&utm_source=github&utm_medium=readme) who does amazing stuff for clients and drives React Native Open Source! 🔥
 
 [callstack-readme-with-love]: https://callstack.com/?utm_source=github.com&utm_medium=referral&utm_campaign=voltra&utm_term=readme-with-love
 [license-badge]: https://img.shields.io/npm/l/voltra?style=for-the-badge
