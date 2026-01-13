@@ -1,42 +1,10 @@
 import { Platform } from 'react-native'
 
+import type { PreloadImageOptions, PreloadImagesResult } from './types.js'
 import VoltraModule from './VoltraModule.js'
 
-/**
- * Options for preloading a single image
- */
-export type PreloadImageOptions = {
-  /**
-   * The URL to download the image from
-   */
-  url: string
-  /**
-   * The key to use when referencing this image (used as assetName in Image component)
-   */
-  key: string
-  /**
-   * HTTP method to use. Defaults to 'GET'.
-   */
-  method?: 'GET' | 'POST' | 'PUT'
-  /**
-   * Optional HTTP headers to include in the request
-   */
-  headers?: Record<string, string>
-}
-
-/**
- * Result of preloading images
- */
-export type PreloadImagesResult = {
-  /**
-   * Keys of images that were successfully preloaded
-   */
-  succeeded: string[]
-  /**
-   * Images that failed to preload, with error messages
-   */
-  failed: { key: string; error: string }[]
-}
+// Re-export types for public API
+export type { PreloadImageOptions, PreloadImagesResult } from './types.js'
 
 function assertIOS(name: string): boolean {
   const isIOS = Platform.OS === 'ios'

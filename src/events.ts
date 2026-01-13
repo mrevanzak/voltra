@@ -1,9 +1,6 @@
+import type { EventSubscription } from './types.js'
 import { assertRunningOnApple } from './utils/index.js'
 import VoltraModule from './VoltraModule.js'
-
-export type EventSubscription = {
-  remove: () => void
-}
 
 export type BasicVoltraEvent = {
   source: string

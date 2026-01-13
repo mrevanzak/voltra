@@ -1,3 +1,143 @@
 import { requireNativeModule } from 'expo'
 
-export default requireNativeModule('VoltraModule')
+import type { EventSubscription, PreloadImageOptions, PreloadImagesResult, UpdateWidgetOptions } from './types.js'
+
+/**
+ * Options for starting a Live Activity
+ */
+export type StartVoltraOptions = {
+  /**
+   * Target type for the activity (used internally)
+   */
+  target?: string
+  /**
+   * URL to open when the Live Activity is tapped.
+   */
+  deepLinkUrl?: string
+  /**
+   * The ID/name of the Live Activity.
+   * Allows you to rebind to the same activity on app restart.
+   */
+  activityId?: string
+  /**
+   * Unix timestamp in milliseconds
+   */
+  staleDate?: number
+  /**
+   * Double value between 0.0 and 1.0, defaults to 0.0
+   */
+  relevanceScore?: number
+}
+
+/**
+ * Options for updating a Live Activity
+ */
+export type UpdateVoltraOptions = {
+  /**
+   * Unix timestamp in milliseconds
+   */
+  staleDate?: number
+  /**
+   * Double value between 0.0 and 1.0, defaults to 0.0
+   */
+  relevanceScore?: number
+}
+
+/**
+ * Options for ending a Live Activity
+ */
+export type EndVoltraOptions = {
+  dismissalPolicy?: {
+    type: 'immediate' | 'after'
+    date?: number
+  }
+}
+
+/**
+ * VoltraModule native module interface
+ */
+export interface VoltraModuleSpec {
+  /**
+   * Start a new Live Activity
+   */
+  startLiveActivity(jsonString: string, options?: StartVoltraOptions): Promise<string>
+
+  /**
+   * Update an existing Live Activity
+   */
+  updateLiveActivity(activityId: string, jsonString: string, options?: UpdateVoltraOptions): Promise<void>
+
+  /**
+   * End a Live Activity
+   */
+  endLiveActivity(activityId: string, options?: EndVoltraOptions): Promise<void>
+
+  /**
+   * End all active Live Activities
+   */
+  endAllLiveActivities(): Promise<void>
+
+  /**
+   * Get the latest (most recently created) Voltra Live Activity ID, if any
+   */
+  getLatestVoltraActivityId(): Promise<string | null>
+
+  /**
+   * List all running Voltra Live Activity IDs
+   */
+  listVoltraActivityIds(): Promise<string[]>
+
+  /**
+   * Check if a Live Activity with the given name is currently active
+   */
+  isLiveActivityActive(activityName: string): boolean
+
+  /**
+   * Check if the app was launched in the background (headless)
+   */
+  isHeadless(): boolean
+
+  /**
+   * Preload images to App Group storage for use in Live Activities
+   */
+  preloadImages(images: PreloadImageOptions[]): Promise<PreloadImagesResult>
+
+  /**
+   * Reload Live Activities to pick up preloaded images
+   */
+  reloadLiveActivities(activityNames?: string[] | null): Promise<void>
+
+  /**
+   * Clear preloaded images from App Group storage
+   */
+  clearPreloadedImages(keys?: string[] | null): Promise<void>
+
+  /**
+   * Update a home screen widget with new content
+   */
+  updateWidget(widgetId: string, jsonString: string, options?: UpdateWidgetOptions): Promise<void>
+
+  /**
+   * Reload widget timelines to refresh their content
+   */
+  reloadWidgets(widgetIds?: string[] | null): Promise<void>
+
+  /**
+   * Clear a widget's stored data
+   */
+  clearWidget(widgetId: string): Promise<void>
+
+  /**
+   * Clear all widgets' stored data
+   */
+  clearAllWidgets(): Promise<void>
+
+  /**
+   * Add an event listener
+   */
+  addListener(event: string, listener: (event: any) => void): EventSubscription
+}
+
+const VoltraModule = requireNativeModule<VoltraModuleSpec>('VoltraModule')
+
+export default VoltraModule

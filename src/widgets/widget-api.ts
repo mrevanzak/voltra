@@ -1,19 +1,11 @@
+import type { UpdateWidgetOptions } from '../types.js'
 import { assertRunningOnApple } from '../utils/assertRunningOnApple.js'
 import VoltraModule from '../VoltraModule.js'
 import { renderWidgetToString } from './renderer.js'
 import { WidgetVariants } from './types.js'
 
-/**
- * Options for updating a home screen widget
- */
-export type UpdateWidgetOptions = {
-  /**
-   * URL to open when the widget is tapped.
-   * Can be a full URL (e.g., "myapp://screen/details")
-   * or a path that will be prefixed with your app's URL scheme.
-   */
-  deepLinkUrl?: string
-}
+// Re-export type for public API
+export type { UpdateWidgetOptions } from '../types.js'
 
 /**
  * Update a home screen widget with new content.

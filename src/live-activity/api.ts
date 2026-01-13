@@ -96,6 +96,23 @@ const normalizeSharedLiveActivityOptions = (
   return Object.keys(normalizedOptions).length > 0 ? normalizedOptions : undefined
 }
 
+const normalizeEndLiveActivityOptions = (
+  options?: EndLiveActivityOptions
+): { dismissalPolicy?: { type: 'immediate' | 'after'; date?: number } } | undefined => {
+  if (!options?.dismissalPolicy) return undefined
+
+  if (typeof options.dismissalPolicy === 'string') {
+    if (options.dismissalPolicy === 'immediate') {
+      return { dismissalPolicy: { type: 'immediate' } }
+    }
+  } else if (typeof options.dismissalPolicy === 'object' && 'after' in options.dismissalPolicy) {
+    return { dismissalPolicy: { type: 'after', date: options.dismissalPolicy.after } }
+  }
+
+  // Default to immediate if unrecognized
+  return { dismissalPolicy: { type: 'immediate' } }
+}
+
 /**
  * React hook for managing Live Activities with automatic lifecycle handling.
  *
@@ -302,13 +319,14 @@ export const updateLiveActivity = async (
  * ```tsx
  * import { stopLiveActivity } from 'voltra'
  *
- * await stopLiveActivity('activity-123', { dismissalPolicy: 'afterDate' })
+ * await stopLiveActivity('activity-123', { dismissalPolicy: 'immediate' })
  * ```
  */
 export const stopLiveActivity = async (targetId: string, options?: EndLiveActivityOptions): Promise<void> => {
   if (!assertRunningOnApple()) return Promise.resolve()
 
-  return VoltraModule.endLiveActivity(targetId, options)
+  const normalizedOptions = normalizeEndLiveActivityOptions(options)
+  return VoltraModule.endLiveActivity(targetId, normalizedOptions)
 }
 
 /**
