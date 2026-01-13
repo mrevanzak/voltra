@@ -48,7 +48,7 @@ enum StyleConverter {
 
       // Positioning
       position: position,
-      zIndex: zIndex
+      zIndex: zIndex.map { Double($0) }
     )
   }
 
