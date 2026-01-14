@@ -56,6 +56,35 @@ iOS deployment target version for the widget extension. If not provided, default
 
 **Note:** Code signing settings (development team, provisioning profiles) are automatically synchronized from the main app target, but the deployment target can be set independently.
 
+### `liveActivity` (optional)
+
+Configuration for Live Activity features, including iOS 18+ supplemental families.
+
+**Type:** `LiveActivityConfig`
+
+```typescript
+interface LiveActivityConfig {
+  /**
+   * Supplemental activity families to enable (iOS 18+)
+   * When configured, Live Activities will appear on watchOS Smart Stack
+   * Currently only "small" is supported
+   */
+  supplementalFamilies?: ('small')[]
+}
+```
+
+**Example:**
+
+```json
+{
+  "liveActivity": {
+    "supplementalFamilies": ["small"]
+  }
+}
+```
+
+See [Supplemental Activity Families](/development/supplemental-activity-families) for detailed usage.
+
 ### `widgets` (optional)
 
 Array of widget configurations for Home Screen widgets. Each widget will be available in the iOS widget gallery.
