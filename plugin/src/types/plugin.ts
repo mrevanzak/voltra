@@ -47,4 +47,5 @@ export interface IOSPluginProps {
   groupIdentifier: string
   projectRoot: string
   platformProjectRoot: string
+  liveActivity?: LiveActivityConfig
 }
