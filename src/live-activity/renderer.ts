@@ -51,6 +51,13 @@ export const renderLiveActivityToJson = (variants: LiveActivityVariants): LiveAc
     }
   }
 
+  // Add supplemental activity family variants (iOS 18+)
+  if (variants.supplemental) {
+    if (variants.supplemental.small) {
+      renderer.addRootNode('sup_sm', variants.supplemental.small)
+    }
+  }
+
   // Render all variants
   const result = renderer.render() as LiveActivityJson
 
