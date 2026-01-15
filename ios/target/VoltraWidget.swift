@@ -15,16 +15,16 @@ public struct VoltraWidget: Widget {
 
   public var body: some WidgetConfiguration {
     if #available(iOS 18.0, *) {
-      return ios18Configuration()
+      return withAdaptiveViewConfig()
     } else {
-      return legacyConfiguration()
+      return defaultViewConfig()
     }
   }
 
   // MARK: - iOS 18+ Configuration (with adaptive view for supplemental activity families)
 
   @available(iOS 18.0, *)
-  private func ios18Configuration() -> some WidgetConfiguration {
+  private func withAdaptiveViewConfig() -> some WidgetConfiguration {
     ActivityConfiguration(for: VoltraAttributes.self) { context in
       VoltraAdaptiveLockScreenView(
         context: context,
@@ -42,9 +42,9 @@ public struct VoltraWidget: Widget {
     // wrapper when configured via plugin (see VoltraWidgetBundle.swift)
   }
 
-  // MARK: - Legacy Configuration (iOS 16.2 - 17.x)
+  // MARK: - Default Configuration (iOS 16.2 - 17.x)
 
-  private func legacyConfiguration() -> some WidgetConfiguration {
+  private func defaultViewConfig() -> some WidgetConfiguration {
     ActivityConfiguration(for: VoltraAttributes.self) { context in
       Voltra(root: rootNode(for: .lockScreen, from: context.state), activityId: context.activityID)
         .widgetURL(VoltraDeepLinkResolver.resolve(context.attributes))
