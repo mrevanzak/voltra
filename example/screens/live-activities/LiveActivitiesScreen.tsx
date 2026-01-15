@@ -46,7 +46,7 @@ const ACTIVITY_METADATA: Record<ActivityKey, { title: string; description: strin
   },
   watch: {
     title: 'Watch Demo (iOS 18+)',
-    description: 'Demonstrates supplemental.small for watchOS Smart Stack appearance.',
+    description: 'Demonstrates supplementalActivityFamilies.small for watchOS Smart Stack appearance.',
   },
 }
 

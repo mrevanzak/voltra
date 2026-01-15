@@ -34,22 +34,22 @@ describe('Variants', () => {
 })
 
 describe('Supplemental Activity Families (iOS 18+)', () => {
-  test('supplemental.small renders to sup_sm key', async () => {
+  test('supplementalActivityFamilies.small renders to saf_sm key', async () => {
     const result = await renderLiveActivityToJson({
       lockScreen: <Voltra.Text>Lock Screen</Voltra.Text>,
-      supplemental: {
+      supplementalActivityFamilies: {
         small: <Voltra.Text>Watch</Voltra.Text>,
       },
     })
 
     expect(result).toHaveProperty('ls')
-    expect(result).toHaveProperty('sup_sm')
+    expect(result).toHaveProperty('saf_sm')
   })
 
-  test('supplemental.small content is rendered correctly', async () => {
+  test('supplementalActivityFamilies.small content is rendered correctly', async () => {
     const result = await renderLiveActivityToJson({
       lockScreen: <Voltra.Text>Lock</Voltra.Text>,
-      supplemental: {
+      supplementalActivityFamilies: {
         small: (
           <Voltra.VStack>
             <Voltra.Text>Watch Content</Voltra.Text>
@@ -58,13 +58,13 @@ describe('Supplemental Activity Families (iOS 18+)', () => {
       },
     })
 
-    expect(result.sup_sm).toBeDefined()
-    expect(result.sup_sm.t).toBe(11)
-    expect(result.sup_sm.c.t).toBe(0)
-    expect(result.sup_sm.c.c).toBe('Watch Content')
+    expect(result.saf_sm).toBeDefined()
+    expect(result.saf_sm.t).toBe(11)
+    expect(result.saf_sm.c.t).toBe(0)
+    expect(result.saf_sm.c.c).toBe('Watch Content')
   })
 
-  test('supplemental families work with all other variants', async () => {
+  test('supplementalActivityFamilies families work with all other variants', async () => {
     const result = await renderLiveActivityToJson({
       lockScreen: <Voltra.Text>Lock</Voltra.Text>,
       island: {
@@ -77,7 +77,7 @@ describe('Supplemental Activity Families (iOS 18+)', () => {
         },
         minimal: <Voltra.Text>Min</Voltra.Text>,
       },
-      supplemental: {
+      supplementalActivityFamilies: {
         small: <Voltra.Text>Watch</Voltra.Text>,
       },
     })
@@ -87,25 +87,25 @@ describe('Supplemental Activity Families (iOS 18+)', () => {
     expect(result).toHaveProperty('isl_cmp_l')
     expect(result).toHaveProperty('isl_cmp_t')
     expect(result).toHaveProperty('isl_min')
-    expect(result).toHaveProperty('sup_sm')
+    expect(result).toHaveProperty('saf_sm')
   })
 
-  test('omitting supplemental.small does not add sup_sm key', async () => {
+  test('omitting supplementalActivityFamilies.small does not add saf_sm key', async () => {
     const result = await renderLiveActivityToJson({
       lockScreen: <Voltra.Text>Lock</Voltra.Text>,
     })
 
     expect(result).toHaveProperty('ls')
-    expect(result).not.toHaveProperty('sup_sm')
+    expect(result).not.toHaveProperty('saf_sm')
   })
 
-  test('empty supplemental object does not add sup_sm key', async () => {
+  test('empty supplementalActivityFamilies object does not add saf_sm key', async () => {
     const result = await renderLiveActivityToJson({
       lockScreen: <Voltra.Text>Lock</Voltra.Text>,
-      supplemental: {},
+      supplementalActivityFamilies: {},
     })
 
     expect(result).toHaveProperty('ls')
-    expect(result).not.toHaveProperty('sup_sm')
+    expect(result).not.toHaveProperty('saf_sm')
   })
 })

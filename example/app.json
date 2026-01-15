@@ -25,7 +25,7 @@
           "groupIdentifier": "group.callstackincubator.voltraexample",
           "enablePushNotifications": true,
           "liveActivity": {
-            "supplementalFamilies": ["small"]
+            "supplementalActivityFamilies": ["small"]
           },
           "widgets": [
             {

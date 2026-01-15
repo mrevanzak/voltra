@@ -14,7 +14,7 @@ const WatchLiveActivity: LiveActivityExampleComponent = forwardRef(
         lockScreen: {
           content: <WatchLiveActivityLockScreen />,
         },
-        supplemental: {
+        supplementalActivityFamilies: {
           small: <WatchLiveActivitySmall />,
         },
         island: {
