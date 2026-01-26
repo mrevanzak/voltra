@@ -9,7 +9,7 @@ import {
 import { LiveActivityExampleComponent } from './types'
 
 const LiquidGlassLiveActivity: LiveActivityExampleComponent = forwardRef(
-  ({ autoUpdate = true, autoStart = false, onIsActiveChange }, ref) => {
+  ({ autoUpdate = true, autoStart = false, onIsActiveChange, activityType }, ref) => {
     const { start, update, end, isActive } = useLiveActivity(
       {
         island: {
@@ -31,6 +31,7 @@ const LiquidGlassLiveActivity: LiveActivityExampleComponent = forwardRef(
         autoUpdate,
         autoStart,
         deepLinkUrl: '/voltraui/glass',
+        activityType,
       }
     )
 

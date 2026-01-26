@@ -8,7 +8,7 @@ import {
 import { LiveActivityExampleComponent } from './types'
 
 const WatchLiveActivity: LiveActivityExampleComponent = forwardRef(
-  ({ autoUpdate = true, autoStart = false, onIsActiveChange }, ref) => {
+  ({ autoUpdate = true, autoStart = false, onIsActiveChange, activityType }, ref) => {
     const { start, update, end, isActive } = useLiveActivity(
       {
         lockScreen: {
@@ -26,6 +26,7 @@ const WatchLiveActivity: LiveActivityExampleComponent = forwardRef(
         autoUpdate,
         autoStart,
         deepLinkUrl: '/voltraui/watch-demo',
+        activityType,
       }
     )
 

@@ -1,6 +1,6 @@
 import { Link } from 'expo-router'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { endAllLiveActivities } from 'voltra/client'
 
@@ -54,6 +54,8 @@ const CARD_ORDER: ActivityKey[] = ['basic', 'stylesheet', 'glass', 'flight', 'wo
 
 export default function LiveActivitiesScreen() {
   const insets = useSafeAreaInsets()
+
+  const [useSupplementalFamilies, setUseSupplementalFamilies] = useState(false)
 
   const [activeMap, setActiveMap] = useState<Record<ActivityKey, boolean>>({
     basic: false,
@@ -184,6 +186,24 @@ export default function LiveActivitiesScreen() {
 
         <NotificationsCard />
 
+        <Card>
+          <View style={styles.settingsCardHeader}>
+            <View style={styles.settingsTitleContainer}>
+              <Card.Title>Watch/CarPlay Support</Card.Title>
+              <Switch
+                value={useSupplementalFamilies}
+                onValueChange={setUseSupplementalFamilies}
+                style={styles.switch}
+              />
+            </View>
+          </View>
+          <Card.Text>
+            {useSupplementalFamilies
+              ? 'Live Activities will display on Apple Watch and CarPlay'
+              : 'Live Activities are iPhone-only'}
+          </Card.Text>
+        </Card>
+
         {CARD_ORDER.map(renderCard)}
 
         <Button
@@ -193,13 +213,41 @@ export default function LiveActivitiesScreen() {
           style={styles.endAllButton}
         />
 
-        <BasicLiveActivity ref={basicRef} onIsActiveChange={handleBasicStatusChange} />
-        <MusicPlayerLiveActivity ref={stylesheetRef} onIsActiveChange={handleStylesheetStatusChange} />
-        <LiquidGlassLiveActivity ref={glassRef} onIsActiveChange={handleGlassStatusChange} />
-        <FlightLiveActivity ref={flightRef} onIsActiveChange={handleFlightStatusChange} />
-        <WorkoutLiveActivity ref={workoutRef} onIsActiveChange={handleWorkoutStatusChange} />
-        <CompassLiveActivity ref={compassRef} onIsActiveChange={handleCompassStatusChange} />
-        <WatchLiveActivity ref={watchRef} onIsActiveChange={handleWatchStatusChange} />
+        <BasicLiveActivity
+          ref={basicRef}
+          onIsActiveChange={handleBasicStatusChange}
+          activityType={useSupplementalFamilies ? 'supplemental-families' : 'standard'}
+        />
+        <MusicPlayerLiveActivity
+          ref={stylesheetRef}
+          onIsActiveChange={handleStylesheetStatusChange}
+          activityType={useSupplementalFamilies ? 'supplemental-families' : 'standard'}
+        />
+        <LiquidGlassLiveActivity
+          ref={glassRef}
+          onIsActiveChange={handleGlassStatusChange}
+          activityType={useSupplementalFamilies ? 'supplemental-families' : 'standard'}
+        />
+        <FlightLiveActivity
+          ref={flightRef}
+          onIsActiveChange={handleFlightStatusChange}
+          activityType={useSupplementalFamilies ? 'supplemental-families' : 'standard'}
+        />
+        <WorkoutLiveActivity
+          ref={workoutRef}
+          onIsActiveChange={handleWorkoutStatusChange}
+          activityType={useSupplementalFamilies ? 'supplemental-families' : 'standard'}
+        />
+        <CompassLiveActivity
+          ref={compassRef}
+          onIsActiveChange={handleCompassStatusChange}
+          activityType={useSupplementalFamilies ? 'supplemental-families' : 'standard'}
+        />
+        <WatchLiveActivity
+          ref={watchRef}
+          onIsActiveChange={handleWatchStatusChange}
+          activityType={useSupplementalFamilies ? 'supplemental-families' : 'standard'}
+        />
       </ScrollView>
     </View>
   )
@@ -265,5 +313,19 @@ const styles = StyleSheet.create({
   },
   endAllButtonText: {
     color: '#8232FF',
+  },
+  settingsCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  settingsTitleContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  switch: {
+    marginLeft: 12,
   },
 })

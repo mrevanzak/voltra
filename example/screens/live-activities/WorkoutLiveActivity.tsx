@@ -5,7 +5,7 @@ import { WorkoutLiveActivityUI } from '../../components/live-activities/WorkoutL
 import { LiveActivityExampleComponent } from './types'
 
 const WorkoutLiveActivity: LiveActivityExampleComponent = forwardRef(
-  ({ autoUpdate = true, autoStart = false, onIsActiveChange }, ref) => {
+  ({ autoUpdate = true, autoStart = false, onIsActiveChange, activityType }, ref) => {
     const [elapsedSeconds, setElapsedSeconds] = useState(0)
     const [heartRate, setHeartRate] = useState(120)
     const [distance, setDistance] = useState(0)
@@ -38,6 +38,7 @@ const WorkoutLiveActivity: LiveActivityExampleComponent = forwardRef(
       activityName: 'workout',
       autoUpdate,
       autoStart,
+      activityType,
     })
 
     useEffect(() => {

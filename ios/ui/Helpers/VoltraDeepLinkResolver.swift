@@ -14,8 +14,8 @@ enum VoltraDeepLinkResolver {
     return Bundle.main.bundleIdentifier
   }
 
-  static func resolve(
-    _ attributes: VoltraAttributes
+  static func resolve<Attributes: VoltraActivityAttributes>(
+    _ attributes: Attributes
   ) -> URL? {
     if let raw = attributes.deepLinkUrl, !raw.isEmpty {
       if raw.contains("://"), let url = URL(string: raw) { return url }

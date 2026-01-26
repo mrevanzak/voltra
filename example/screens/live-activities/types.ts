@@ -4,6 +4,7 @@ export type LiveActivityExampleComponentProps = {
   autoUpdate?: boolean
   autoStart?: boolean
   onIsActiveChange?: (isActive: boolean) => void
+  activityType?: 'standard' | 'supplemental-families'
 }
 
 export type LiveActivityExampleComponentRef = {

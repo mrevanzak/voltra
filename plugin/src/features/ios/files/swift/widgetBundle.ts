@@ -1,32 +1,7 @@
 import dedent from 'dedent'
 
-import { ACTIVITY_FAMILY_MAP, DEFAULT_WIDGET_FAMILIES, WIDGET_FAMILY_MAP } from '../../../../constants'
+import { DEFAULT_WIDGET_FAMILIES, WIDGET_FAMILY_MAP } from '../../../../constants'
 import type { ActivityFamily, WidgetConfig } from '../../../../types'
-
-function generateSupplementalActivityFamiliesSwift(families?: ActivityFamily[]): string | null {
-  if (!families || families.length === 0) {
-    return null
-  }
-  return families.map((f) => ACTIVITY_FAMILY_MAP[f]).join(', ')
-}
-
-function generateVoltraWidgetWrapper(familiesSwift: string): string {
-  return dedent`
-    // MARK: - Live Activity with Supplemental Activity Families
-
-    struct VoltraWidgetWithSupplementalActivityFamilies: Widget {
-      private let wrapped = VoltraWidget()
-
-      var body: some WidgetConfiguration {
-        if #available(iOS 18.0, *) {
-          return wrapped.body.supplementalActivityFamilies([${familiesSwift}])
-        } else {
-          return wrapped.body
-        }
-      }
-    }
-  `
-}
 
 /**
  * Generates Swift code for a single widget struct
@@ -75,9 +50,6 @@ export function generateWidgetBundleSwift(
 
   // Generate widget bundle body entries
   const widgetInstances = widgets.map((w) => `    VoltraWidget_${w.id}()`).join('\n')
-  const familiesSwift = generateSupplementalActivityFamiliesSwift(supplementalActivityFamilies)
-  const liveActivityWidget = familiesSwift ? 'VoltraWidgetWithSupplementalActivityFamilies()' : 'VoltraWidget()'
-  const wrapperStruct = familiesSwift ? '\n\n' + generateVoltraWidgetWrapper(familiesSwift) : ''
 
   return dedent`
     //
@@ -94,8 +66,11 @@ export function generateWidgetBundleSwift(
     @main
     struct VoltraWidgetBundle: WidgetBundle {
       var body: some Widget {
-        // Live Activity Widget (Dynamic Island + Lock Screen)
-        ${liveActivityWidget}
+        // Standard Live Activity (iPhone-only)
+        VoltraWidget()
+
+        // Live Activity with Watch/CarPlay support
+        VoltraWidgetWithSupplementalActivityFamilies()
 
         // Home Screen Widgets
     ${widgetInstances}
@@ -104,7 +79,7 @@ export function generateWidgetBundleSwift(
 
     // MARK: - Home Screen Widget Definitions
 
-    ${widgetStructs}${wrapperStruct}
+    ${widgetStructs}
   `
 }
 
@@ -113,10 +88,6 @@ export function generateWidgetBundleSwift(
  * (only Live Activities)
  */
 export function generateDefaultWidgetBundleSwift(supplementalActivityFamilies?: ActivityFamily[]): string {
-  const familiesSwift = generateSupplementalActivityFamiliesSwift(supplementalActivityFamilies)
-  const liveActivityWidget = familiesSwift ? 'VoltraWidgetWithSupplementalActivityFamilies()' : 'VoltraWidget()'
-  const wrapperStruct = familiesSwift ? '\n\n' + generateVoltraWidgetWrapper(familiesSwift) : ''
-
   return dedent`
     //
     //  VoltraWidgetBundle.swift
@@ -132,9 +103,12 @@ export function generateDefaultWidgetBundleSwift(supplementalActivityFamilies?: 
     @main
     struct VoltraWidgetBundle: WidgetBundle {
       var body: some Widget {
-        // Live Activity Widget (Dynamic Island + Lock Screen)
-        ${liveActivityWidget}
+        // Standard Live Activity (iPhone-only)
+        VoltraWidget()
+
+        // Live Activity with Watch/CarPlay support
+        VoltraWidgetWithSupplementalActivityFamilies()
       }
-    }${wrapperStruct}
+    }
   `
 }

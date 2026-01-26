@@ -29,6 +29,7 @@ export interface ConfigPluginProps {
    * Configuration for Live Activities
    */
   liveActivity?: LiveActivityConfig
+  /**
    * Custom target name for the widget extension
    * If not provided, defaults to "{AppName}LiveActivity"
    * Useful for matching existing provisioning profiles or credentials
