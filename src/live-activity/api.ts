@@ -34,11 +34,6 @@ export type StartLiveActivityOptions = {
    * URL to open when the Live Activity is tapped.
    */
   deepLinkUrl?: string
-  /**
-   * Activity type: "standard" (iPhone-only) or "supplemental-families" (Watch/CarPlay support)
-   * @default "standard"
-   */
-  activityType?: 'standard' | 'supplemental-families'
 } & SharedLiveActivityOptions
 
 export type UpdateLiveActivityOptions = SharedLiveActivityOptions
@@ -65,11 +60,6 @@ export type UseLiveActivityOptions = {
    * URL to open when the Live Activity is tapped.
    */
   deepLinkUrl?: string
-  /**
-   * Activity type: "standard" (iPhone-only) or "supplemental-families" (Watch/CarPlay support)
-   * @default "standard"
-   */
-  activityType?: 'standard' | 'supplemental-families'
 }
 
 export type UseLiveActivityResult = {
@@ -281,7 +271,6 @@ export const startLiveActivity = async (
     target: 'liveActivity',
     deepLinkUrl: options?.deepLinkUrl,
     activityId: options?.activityName,
-    activityType: options?.activityType,
     ...normalizedSharedOptions,
   })
   return targetId

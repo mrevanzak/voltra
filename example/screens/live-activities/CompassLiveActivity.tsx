@@ -33,7 +33,7 @@ function calculateHeading(x: number, y: number): number {
 }
 
 const CompassLiveActivity: LiveActivityExampleComponent = forwardRef(
-  ({ autoUpdate = true, autoStart = false, onIsActiveChange, activityType }, ref) => {
+  ({ autoUpdate = true, autoStart = false, onIsActiveChange }, ref) => {
     const [heading, setHeading] = useState(0)
     const [hasPermission, setHasPermission] = useState(false)
 
@@ -66,7 +66,6 @@ const CompassLiveActivity: LiveActivityExampleComponent = forwardRef(
       activityName: 'compass',
       autoUpdate,
       autoStart,
-      activityType,
     })
 
     // Request permission and start activity

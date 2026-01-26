@@ -5,7 +5,7 @@ import { MusicPlayerLiveActivityUI, SONGS } from '../../components/live-activiti
 import { LiveActivityExampleComponent } from './types'
 
 const MusicPlayerLiveActivity: LiveActivityExampleComponent = forwardRef(
-  ({ autoUpdate = true, autoStart = false, onIsActiveChange, activityType }, ref) => {
+  ({ autoUpdate = true, autoStart = false, onIsActiveChange }, ref) => {
     const [currentSongIndex, setCurrentSongIndex] = useState(0)
     const [isPlaying, setIsPlaying] = useState(false)
 
@@ -22,7 +22,6 @@ const MusicPlayerLiveActivity: LiveActivityExampleComponent = forwardRef(
       activityName: 'music-player',
       autoUpdate,
       autoStart,
-      activityType,
     })
 
     useEffect(() => {

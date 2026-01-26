@@ -33,11 +33,6 @@ public struct StartVoltraOptions: Record {
   @Field
   public var relevanceScore: Double?
 
-  /// Activity type: "standard" (iPhone-only) or "supplemental-families" (Watch/CarPlay support)
-  /// Defaults to "standard" for backward compatibility
-  @Field
-  public var activityType: String?
-
   public init() {}
 }
 

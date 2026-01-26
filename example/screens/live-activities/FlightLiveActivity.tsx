@@ -13,7 +13,7 @@ import {
 import { LiveActivityExampleComponent } from './types'
 
 const FlightLiveActivity: LiveActivityExampleComponent = forwardRef(
-  ({ autoUpdate = true, autoStart = false, onIsActiveChange, activityType }, ref) => {
+  ({ autoUpdate = true, autoStart = false, onIsActiveChange }, ref) => {
     const { start, update, end, isActive } = useLiveActivity(
       {
         lockScreen: <FlightLiveActivityLockScreen />,
@@ -36,7 +36,6 @@ const FlightLiveActivity: LiveActivityExampleComponent = forwardRef(
         autoUpdate,
         autoStart,
         deepLinkUrl: '/voltraui/flight',
-        activityType,
       }
     )
 

@@ -5,7 +5,7 @@ import { BasicLiveActivityUI } from '../../components/live-activities/BasicLiveA
 import { LiveActivityExampleComponent } from './types'
 
 const BasicLiveActivity: LiveActivityExampleComponent = forwardRef(
-  ({ autoUpdate = true, autoStart = false, onIsActiveChange, activityType }, ref) => {
+  ({ autoUpdate = true, autoStart = false, onIsActiveChange }, ref) => {
     const { start, update, end, isActive } = useLiveActivity(
       {
         lockScreen: {
@@ -20,7 +20,6 @@ const BasicLiveActivity: LiveActivityExampleComponent = forwardRef(
         autoUpdate,
         autoStart,
         deepLinkUrl: '/voltraui/basic',
-        activityType,
       }
     )
 

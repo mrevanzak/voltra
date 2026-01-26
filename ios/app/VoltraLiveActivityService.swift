@@ -33,10 +33,6 @@ public struct CreateActivityRequest {
   /// If true, ends any existing activities with the same name (defaults to true)
   public let endExistingWithSameName: Bool
 
-  /// Activity type: "standard" (iPhone-only) or "supplemental-families" (Watch/CarPlay)
-  /// Defaults to "standard" for backward compatibility
-  public let activityType: String
-
   public init(
     activityId: String? = nil,
     deepLinkUrl: String? = nil,
@@ -44,8 +40,7 @@ public struct CreateActivityRequest {
     staleDate: Date? = nil,
     relevanceScore: Double = 0.0,
     pushType: PushType? = nil,
-    endExistingWithSameName: Bool = true,
-    activityType: String = "standard"
+    endExistingWithSameName: Bool = true
   ) {
     self.activityId = activityId
     self.deepLinkUrl = deepLinkUrl
@@ -54,7 +49,6 @@ public struct CreateActivityRequest {
     self.relevanceScore = relevanceScore
     self.pushType = pushType
     self.endExistingWithSameName = endExistingWithSameName
-    self.activityType = activityType
   }
 }
 
@@ -160,7 +154,7 @@ public class VoltraLiveActivityService {
     let initialState = try VoltraAttributes.ContentState(uiJsonData: request.jsonString)
 
     // Request the activity
-    let activity = try Activity.request(
+    _ = try Activity.request(
       attributes: attributes,
       content: .init(
         state: initialState,
@@ -169,19 +163,6 @@ public class VoltraLiveActivityService {
       ),
       pushType: request.pushType
     )
-
-    default: // "standard" or any unrecognized value defaults to standard
-      let attributes = VoltraAttributes(name: finalActivityId, deepLinkUrl: request.deepLinkUrl)
-      _ = try Activity.request(
-        attributes: attributes,
-        content: .init(
-          state: initialState,
-          staleDate: request.staleDate,
-          relevanceScore: request.relevanceScore
-        ),
-        pushType: request.pushType
-      )
-    }
 
     return finalActivityId
   }
@@ -272,6 +253,126 @@ public class VoltraLiveActivityService {
     let activities = getAllActivities()
     for activity in activities {
       await endActivity(activity)
+    }
+  }
+
+
+  // MARK: - Monitoring
+
+  private var monitoredActivityIds: Set<String> = []
+  private var monitoringTasks: [Task<Void, Never>] = []
+
+  /// Start monitoring all Live Activities and Push Tokens
+  public func startMonitoring(enablePush: Bool) {
+    guard Self.isSupported() else { return }
+
+    // 1. Monitor Push-to-Start Tokens
+    if enablePush {
+      if #available(iOS 17.2, *) {
+        startPushToStartTokenObservation()
+      }
+    }
+
+    // 2. Monitor Live Activity Updates (Creation & Lifecycle)
+    startActivityUpdatesObservation(enablePush: enablePush)
+  }
+
+  /// Stop all monitoring tasks
+  public func stopMonitoring() {
+    monitoredActivityIds.removeAll()
+    monitoringTasks.forEach { $0.cancel() }
+    monitoringTasks.removeAll()
+  }
+
+  @available(iOS 17.2, *)
+  private func startPushToStartTokenObservation() {
+    // Standard Activities
+    if let initialTokenData = Activity<VoltraAttributes>.pushToStartToken {
+      let token = initialTokenData.hexString
+      VoltraEventBus.shared.send(.pushToStartTokenReceived(token: token))
+    }
+    let standardTask = Task {
+      for await tokenData in Activity<VoltraAttributes>.pushToStartTokenUpdates {
+        let token = tokenData.hexString
+        VoltraEventBus.shared.send(.pushToStartTokenReceived(token: token))
+      }
+    }
+    monitoringTasks.append(standardTask)
+
+    // Supplemental Activities
+    if let initialTokenData = Activity<VoltraAttributesWithSupplementalFamilies>.pushToStartToken {
+      let token = initialTokenData.hexString
+      VoltraEventBus.shared.send(.pushToStartTokenReceived(token: token))
+    }
+    let supplementalTask = Task {
+      for await tokenData in Activity<VoltraAttributesWithSupplementalFamilies>.pushToStartTokenUpdates {
+        let token = tokenData.hexString
+        VoltraEventBus.shared.send(.pushToStartTokenReceived(token: token))
+      }
+    }
+    monitoringTasks.append(supplementalTask)
+  }
+
+  private func startActivityUpdatesObservation(enablePush: Bool) {
+    // 1. Handle currently existing activities
+    for activity in Activity<VoltraAttributes>.activities {
+      monitorActivity(activity, enablePush: enablePush)
+    }
+    for activity in Activity<VoltraAttributesWithSupplementalFamilies>.activities {
+      monitorActivity(activity, enablePush: enablePush)
+    }
+
+    // 2. Listen for NEW activities
+    let standardUpdatesTask = Task {
+      for await newActivity in Activity<VoltraAttributes>.activityUpdates {
+        monitorActivity(newActivity, enablePush: enablePush)
+      }
+    }
+    monitoringTasks.append(standardUpdatesTask)
+
+    let supplementalUpdatesTask = Task {
+      for await newActivity in Activity<VoltraAttributesWithSupplementalFamilies>.activityUpdates {
+        monitorActivity(newActivity, enablePush: enablePush)
+      }
+    }
+    monitoringTasks.append(supplementalUpdatesTask)
+  }
+
+  /// Set up observers for an activity's lifecycle
+  private func monitorActivity<Attributes: VoltraActivityAttributes>(_ activity: Activity<Attributes>, enablePush: Bool) {
+    let activityId = activity.id
+
+    // Avoid duplicate monitoring
+    guard !monitoredActivityIds.contains(activityId) else { return }
+    monitoredActivityIds.insert(activityId)
+
+    // Lifecycle state changes
+    let stateTask = Task {
+      for await state in activity.activityStateUpdates {
+        VoltraEventBus.shared.send(
+          .stateChange(
+            activityName: activity.attributes.name,
+            state: String(describing: state)
+          )
+        )
+      }
+    }
+    monitoringTasks.append(stateTask)
+
+    // Push token updates
+    if enablePush {
+      let tokenTask = Task {
+        for await pushTokenData in activity.pushTokenUpdates {
+          let pushTokenString = pushTokenData.hexString
+          VoltraEventBus.shared.send(
+            .tokenReceived(
+              activityName: activity.attributes.name,
+              pushToken: pushTokenString
+            )
+          )
+        }
+      }
+      monitoringTasks.append(tokenTask)
     }
   }
 }

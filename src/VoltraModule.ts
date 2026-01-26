@@ -27,11 +27,6 @@ export type StartVoltraOptions = {
    * Double value between 0.0 and 1.0, defaults to 0.0
    */
   relevanceScore?: number
-  /**
-   * Activity type: "standard" (iPhone-only) or "supplemental-families" (Watch/CarPlay support)
-   * @default "standard"
-   */
-  activityType?: 'standard' | 'supplemental-families'
 }
 
 /**
