@@ -34,6 +34,7 @@ The Voltra Expo config plugin accepts several configuration options in your `app
 ### `groupIdentifier` (optional)
 
 App Group identifier for sharing data between your app and the widget extension. Required if you want to:
+
 - Forward component events (like button taps) from Live Activities to your JavaScript code
 - Share images between your app and the extension
 - Use image preloading features
@@ -113,4 +114,3 @@ Array of widget configurations for Home Screen widgets. Each widget will be avai
   ]
 }
 ```
-
